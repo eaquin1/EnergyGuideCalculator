@@ -1,4 +1,4 @@
-# Electricity Power Consumption Calculator
+# Energy Guide Calculator
 
 The target users for this website are people who would like to be aware of their electricity usage, both for saving money in utility bills, and to help reduce carbon emissions.
 
