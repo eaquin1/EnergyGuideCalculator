@@ -16,9 +16,9 @@ def get_categories():
 def calculate_consumption(calc_dict):
 
     calculations = {
-        "daily_kWh": 0,
-        "annual_consump": 0,
-        "annual_cost": 0
+        # "daily_kWh": 0,
+        # "annual_consump": 0,
+        # "annual_cost": 0
     }
 
     calculations["daily_kWh"] = (calc_dict["watts"] * calc_dict["hours"]) / 1000

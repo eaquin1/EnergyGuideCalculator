@@ -54,19 +54,19 @@ def calculate():
         "hours": 0,
         "days": 0
     }
-    print(request.form.get('wattage'))
-    if request.form.get('wattage'):
-        calc_dict["watts"] = request.form.get('wattage')
+    print(request.args.get('wattage'))
+    if request.args.get('wattage'):
+        calc_dict["watts"] = float(request.args.get('wattage'))
     
-    if request.form.get('rate'):
-        calc_dict["rate"] = request.form.get('rate')
+    if request.args.get('rate'):
+        calc_dict["rate"] = float(request.args.get('rate'))
     
-    if request.form.get('hours'):
-        calc_dict['hours'] = request.form.get('hours')
+    if request.args.get('hours'):
+        calc_dict['hours'] = float(request.args.get('hours'))
     
-    if request.form.get('days'):
-        calc_dict['days'] = request.args.get('days')
-    print(calc_dict)
+    if request.args.get('days'):
+        calc_dict['days'] = float(request.args.get('days'))
+    
     result = utils.calculate_consumption(calc_dict)
-    print(result)
+   
     return jsonify(result)

@@ -8,8 +8,16 @@ $("#days").on("blur", async function(){
     let resp = await axios({
         method: 'get',
         url: '/calculate',
-        //headers: {"X-CSRFToken": csrfToken}
+        params: {
+            wattage: $("#wattage").val(),
+            rate: $("#rate").val(),
+            hours: $("#hours").val(),
+            days: $("#days").val()
+        }
     })
-
-    console.log(resp)
+    console.log(resp.data)
+    for (let r in resp.data){
+        let htmlStr = `<p>${r}: ${resp.data[r]}</p>`
+        $("#results").append(htmlStr)
+    }
 })
