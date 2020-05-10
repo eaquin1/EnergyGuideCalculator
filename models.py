@@ -13,10 +13,10 @@ class Appliance(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
-    watts = db.Column(db.Float)
-    category_id = db.Column(db.Text)
+    watts = db.Column(db.Integer)
+    category = db.Column(db.Text)
 
     def __repr__(self):
         """Show info about appliance"""
         a = self
-        return f"<Appliance {a.id} {a.name} {a.watts} {a.category_id}>"
+        return f"<Appliance {a.id} {a.name} {a.watts} {a.category}>"
