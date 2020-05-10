@@ -4,8 +4,9 @@ $("#appliance-select").change(async function() {
      $("#wattage").val(resp.data.wattage)
 })
 
-$("#days").on("blur", async function(){
-    let resp = await axios({
+$("#zipcode").on("blur", async function(){
+    // send request to calculate the usage costs
+    let calc_resp = await axios({
         method: 'get',
         url: '/calculate',
         params: {
@@ -15,9 +16,25 @@ $("#days").on("blur", async function(){
             days: $("#days").val()
         }
     })
-    console.log(resp.data)
-    for (let r in resp.data){
-        let htmlStr = `<p>${r}: ${resp.data[r]}</p>`
+
+   //send request with zipcode to receive grid cleanliness
+    let zip_resp = await axios({
+        method: 'get',
+        url: '/grid',
+        params: {
+            zipcode: $("#zipcode").val()
+        }
+    })
+
+    $("#results").empty()
+    for (let r in calc_resp.data){
+        let htmlStr = `<p>${r}: ${calc_resp.data[r]}</p>`
         $("#results").append(htmlStr)
     }
+
+    let grid_name_html = `<p> Grid: ${zip_resp.data.ba}</p>`
+    let grid_emission = `<p> Current Emissions (%): ${zip_resp.data.percent}`
+
+    $("#results").append(grid_name_html)
+    $("#results").append(grid_emission)
 })
