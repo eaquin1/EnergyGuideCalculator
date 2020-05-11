@@ -35,10 +35,11 @@ connect_db(app)
 @app.route("/", methods=["GET", "POST"])
 def render_home():
     """Home page with calculator"""
-    
-    appliances = utils.get_categories()
+    form = AddApplianceForm()
 
-    return render_template('index.html', appl = appliances)
+    appliances = utils.get_categories()
+    form.appliance.choices = [(10, "Taht"), (11, "NIce Wather")]
+    return render_template('index.html', appl = appliances, form=form)
 
 @app.route("/watts/<int:id>")
 def send_watts(id):

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, IntegerField
+from wtforms import StringField 
 from wtforms.validators import NumberRange
-#from wtforms_components.fields import SelectField
+from wtforms_components import SelectField, IntegerField
 
 class AddApplianceForm(FlaskForm):
     """Form for appliance energy calculator"""
