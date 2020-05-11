@@ -77,7 +77,8 @@ def calculate():
 def return_grid_value():
     """Return grid cleanliness value. First call GeoNames API to get longitude and latitude, then call Watt Time API"""
     zipcode = request.args.get('zipcode')
-    geonames = "http://api.geonames.org/searchJSON" #?q={request.args.get('zipcode')}&username={GEONAMES_USER}"
+    #Todo: URL for Canada and US http://api.geonames.org/postalCodeLookupJSON?postalcode=n4k5n8&country=CA&username=
+    geonames = "http://api.geonames.org/searchJSON"
     resp_zip = requests.get(geonames, params={"q": zipcode, "username": GEONAMES_USER})
     geodata = resp_zip.json()
     lng = geodata['geonames'][0]['lng']
