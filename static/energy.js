@@ -1,6 +1,8 @@
+
+
 $("#appliance-select").change(async function() {
     let appliance = $(this).find("option:selected").val();
-    let resp = await axios.get(`/watts/${appliance}`)
+    let resp = await axios.get(`/watts/${appliance}?nocache=` + new Date().getTime())
      $("#watts").val(resp.data.watts)
 })
 
@@ -9,22 +11,28 @@ $("#submit-calc").on("click", async function(e){
     // send request to calculate the usage costs
     let calc_resp = await axios({
         method: 'get',
-        url: '/calculate',
+        url: '/calculate' + '?nocache=' + new Date().getTime(),
         params: {
             watts: $("#watts").val(),
             rate: $("#rate").val(),
             hours: $("#hours").val(),
             days: $("#days").val()
         }
+        // headers: {
+        //     "X-CSRFToken": csrfToken
+        //
     })
 
    //send request with zipcode to receive grid cleanliness
     let zip_resp = await axios({
         method: 'get',
-        url: '/grid',
+        url: '/grid'  + '?nocache=' + new Date().getTime(),
         params: {
             zipcode: $("#zipcode").val()
         }
+        // headers: {
+        //     "X-CSRFToken": csrfToken
+        // }
     })
 
     htmlCalcResults(calc_resp);
@@ -37,7 +45,7 @@ function htmlCalcResults(calc_resp) {
     $("#calc-results").empty()
 
     let data = calc_resp.data;
-    console.log(data)
+    
     let htmlObj = {};
     htmlObj["dailyEnergy"] = `<p>Daily energy consumption: ${data["daily_kWh"]} kWh</p>`;
     htmlObj["annualEnergyConsump"] = `<p>Annual energy consumption: ${data["annual_consump"]} kWh</p>`;

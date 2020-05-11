@@ -56,7 +56,7 @@ def calculate():
         "hours": 0,
         "days": 0
     }
-   
+    
     for arg in request.args:
         if request.args.get(arg):
             calc_dict[arg] = float(request.args.get(arg))
@@ -85,7 +85,6 @@ def return_grid_value():
     watt_time_login_url = f"{wt_base_url}/login/"
     watt_time_token = requests.get(watt_time_login_url, headers = headers).json()
     
-    #determine grid region
     region_headers = {
         'Authorization': 'Bearer %s' % watt_time_token['token']
     }
