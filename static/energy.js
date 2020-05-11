@@ -4,7 +4,8 @@ $("#appliance-select").change(async function() {
      $("#wattage").val(resp.data.wattage)
 })
 
-$("#zipcode").on("blur", async function(){
+$("#submit-calc").on("click", async function(e){
+    e.preventDefault();
     // send request to calculate the usage costs
     let calc_resp = await axios({
         method: 'get',
