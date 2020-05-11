@@ -16,7 +16,7 @@ def get_categories():
               (7, 'Torchiere Lamp-Halogen')],
              'Bedroom and Bathroom': [(8, 'Hair Dryer'),
               (9, 'Waterbed Heater')], ..."""
-              
+
     all_appliances = Appliance.query.all()
     
     category_dict = defaultdict(list)
@@ -28,7 +28,7 @@ def get_categories():
 
 def calculate_consumption(calc_dict):
     """Returns a dictionary of calculated energy costs
-        { "daily_kWh":5.7, "annual_consump": 5.7, "annual_cost": 0.69 }"""
+        { "daily_kWh": 5.7, "annual_consump": 5.7, "annual_cost": 0.69 }"""
 
     calculations = {}
     

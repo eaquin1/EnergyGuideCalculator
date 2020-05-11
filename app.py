@@ -45,7 +45,7 @@ def send_watts(id):
     """Return wattage of appliance"""
 
     appliance = Appliance.query.get_or_404(id)
-    result = {"wattage": appliance.watts}
+    result = {"watts": appliance.watts}
     return jsonify(result)
 
 @app.route("/calculate")
@@ -56,19 +56,11 @@ def calculate():
         "hours": 0,
         "days": 0
     }
+   
+    for arg in request.args:
+        if request.args.get(arg):
+            calc_dict[arg] = float(request.args.get(arg))
 
-    if request.args.get('wattage'):
-        calc_dict["watts"] = float(request.args.get('wattage'))
-    
-    if request.args.get('rate'):
-        calc_dict["rate"] = float(request.args.get('rate'))
-    
-    if request.args.get('hours'):
-        calc_dict['hours'] = float(request.args.get('hours'))
-    
-    if request.args.get('days'):
-        calc_dict['days'] = float(request.args.get('days'))
-    
     result = utils.calculate_consumption(calc_dict)
    
     return jsonify(result)
@@ -97,8 +89,6 @@ def return_grid_value():
     region_headers = {
         'Authorization': 'Bearer %s' % watt_time_token['token']
     }
-    # watt_time_region_url = f"{wt_base_url}/ba-from-loc/"
-    # watt_region = requests.get(watt_time_region_url, params={"latitude": lat, "longitude": lng}, headers=region_headers).json()
     
     #get real time emissions for region
     watt_time_emission_url = f"{wt_base_url}/index"

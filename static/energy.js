@@ -1,7 +1,7 @@
 $("#appliance-select").change(async function() {
     let appliance = $(this).find("option:selected").val();
     let resp = await axios.get(`/watts/${appliance}`)
-     $("#wattage").val(resp.data.wattage)
+     $("#watts").val(resp.data.watts)
 })
 
 $("#submit-calc").on("click", async function(e){
@@ -11,7 +11,7 @@ $("#submit-calc").on("click", async function(e){
         method: 'get',
         url: '/calculate',
         params: {
-            wattage: $("#wattage").val(),
+            watts: $("#watts").val(),
             rate: $("#rate").val(),
             hours: $("#hours").val(),
             days: $("#days").val()
@@ -27,15 +27,32 @@ $("#submit-calc").on("click", async function(e){
         }
     })
 
-    $("#results").empty()
-    for (let r in calc_resp.data){
-        let htmlStr = `<p>${r}: ${calc_resp.data[r]}</p>`
-        $("#results").append(htmlStr)
-    }
-
-    let grid_name_html = `<p> Grid: ${zip_resp.data.ba}</p>`
-    let grid_emission = `<p> Current Emissions (%): ${zip_resp.data.percent}`
-
-    $("#results").append(grid_name_html)
-    $("#results").append(grid_emission)
+    htmlCalcResults(calc_resp);
+    htmlGridResults(zip_resp);
+    
 })
+
+//Turn calculated energy results into HTML
+function htmlCalcResults(calc_resp) {
+    $("#calc-results").empty()
+
+    let data = calc_resp.data;
+    console.log(data)
+    let htmlObj = {};
+    htmlObj["dailyEnergy"] = `<p>Daily energy consumption: ${data["daily_kWh"]} kWh</p>`;
+    htmlObj["annualEnergyConsump"] = `<p>Annual energy consumption: ${data["annual_consump"]} kWh</p>`;
+    htmlObj["annualCost"] = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
+    $("#calc-results").append(htmlObj["dailyEnergy"])
+    $("#calc-results").append(htmlObj["annualEnergyConsump"])
+    $("#calc-results").append(htmlObj["annualCost"]) 
+}
+
+function htmlGridResults(grid_result) {
+    $("#grid-results").empty()
+
+    let grid_name_html = `<p> Grid: ${grid_result.data.ba}</p>`
+    let grid_emission = `<p> Current Emissions (%): ${grid_result.data.percent}`
+
+    $("#grid-results").append(grid_name_html)
+    $("#grid-results").append(grid_emission)
+}

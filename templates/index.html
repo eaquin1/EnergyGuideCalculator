@@ -1,9 +1,9 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-6 col-centered">
-    <div class="title">Appliance Energy Calculator</div>
+<div class="row justify-content-center">
+    <div class="col-sm-6 col-centered border border-info rounded px-5 py-3">
+    <div class="title text-center">Appliance Energy Calculator</div>
     <form>
         <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> -->
         <div class="form-group appliance-group active">
@@ -20,8 +20,8 @@
         </div>
 
         <div class="form-group appliance-group">
-            <label for="wattage">Wattage</label>
-            <input type="number" id="wattage" name="wattage" class="form-control integer-input" value=1000>
+            <label for="watts">Wattage</label>
+            <input type="number" id="watts" name="watts" class="form-control integer-input" value=1000>
         </div>
         
         <div class="form-group appliance-group">
@@ -44,8 +44,14 @@
     </form>
     </div>
 </div>
-<div id="results">
+<div class="rowj ustify-content-center">
+   
+    <div id="calc-results" class="m-5 col-sm-6 col-centered">
 
+    </div>
+    <div id="grid-results" class="m-5 col-sm-6 col-centered">
+
+    </div>
 </div>
 
 

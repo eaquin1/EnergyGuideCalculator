@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Energy Guide Calculator</title>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/minty/bootstrap.min.css" rel="stylesheet" integrity="sha384-4HfFay3AYJnEmbgRzxYWJk/Ka5jIimhB/Fssk7NGT9Tj3rkEChpSxLK0btOGzf2I" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/energy.css">
     <script src="https://unpkg.com/jquery"></script>
 </head>
 <body>
@@ -27,11 +28,17 @@
         </ul>
     </div>
     </nav>
+    
     <div class="container mt-5">
         {% block content %}
         {% endblock %}
     </div>
-    <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; Home Energy Saver;</p>
+
+    <footer class="fixed-bottom text-center mt-auto">
+        <div class="inner">
+            <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; Home Energy Saver;</p>
+        </div>
+    </footer>
 <script src="https://unpkg.com/axios/dist/axios.js"></script>
 <script src="/static/energy.js"></script>
 <!-- Optional JavaScript -->
