@@ -2,7 +2,7 @@ from app import db
 from pathlib import Path
 from openpyxl import load_workbook
 import openpyxl.styles
-from models import Appliance
+from models import Appliance, User, UserSearch
 import PyPDF2
 
 db.drop_all()

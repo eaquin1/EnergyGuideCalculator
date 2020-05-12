@@ -6,7 +6,7 @@ import requests
 from os import environ
 from forms import AddApplianceForm
 from flask_wtf.csrf import CSRFProtect
-from config.app_config import GEONAMES_USER, B64VAL
+from API import login_watttime, retrieve_long_lat
 import utils
 
 app = Flask(__name__)
@@ -62,7 +62,7 @@ def calculate():
         for arg in request.args:
             if request.args.get(arg):
                 calc_dict[arg] = float(request.args.get(arg))
-        print(calc_dict)
+        
         result = utils.calculate_consumption(calc_dict)
     
         return jsonify(result)
@@ -72,31 +72,9 @@ def calculate():
 def return_grid_value():
     """Return grid cleanliness value. First call GeoNames API to get longitude and latitude, then call Watt Time API"""
     if session['csrf_token']:
-        
         zipcode = request.args.get('zipcode')
-        #Todo: URL for Canada and US http://api.geonames.org/postalCodeLookupJSON?postalcode=n4k5n8&country=CA&username=
-        geonames = "http://api.geonames.org/searchJSON"
-        resp_zip = requests.get(geonames, params={"q": zipcode, "username": GEONAMES_USER})
-        geodata = resp_zip.json()
-        lng = geodata['geonames'][0]['lng']
-        lat = geodata['geonames'][0]['lat']
-        
-        #Watt time API calls
-        wt_base_url = "https://api2.watttime.org/v2"
-        headers = {
-                'Authorization': 'Basic %s' % B64VAL
-                }
-        #login to WattTime to get token
-        watt_time_login_url = f"{wt_base_url}/login/"
-        watt_time_token = requests.get(watt_time_login_url, headers = headers).json()
-        
-        region_headers = {
-            'Authorization': 'Bearer %s' % watt_time_token['token']
-        }
-        
-        #get real time emissions for region
-        watt_time_emission_url = f"{wt_base_url}/index"
-        watt_emissions = requests.get(watt_time_emission_url, params={"latitude": lat, "longitude": lng}, headers=region_headers).json()
-        
-        return watt_emissions
+        coords = retrieve_long_lat(zipcode)
+        json_emissions = login_watttime(coords)
+        return json_emissions
+    
     return redirect('/')
