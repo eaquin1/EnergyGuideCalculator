@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify, Response, redirect
+from flask import Flask, render_template, request, jsonify, Response, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Appliance
 import requests
@@ -45,56 +45,58 @@ def render_home():
 @app.route("/watts/<int:id>")
 def send_watts(id):
     """Return wattage of appliance"""
-    
-    
-    appliance = Appliance.query.get_or_404(id)
-    result = {"watts": appliance.watts}
-    return jsonify(result)
+    if session['csrf_token']:
+        appliance = Appliance.query.get_or_404(id)
+        result = {"watts": appliance.watts}
+        return jsonify(result)
+    return redirect('/')
     
 
 @app.route("/calculate")
 def calculate():
-    calc_dict = {
-        "watts": 0,
-        "rate": 0,
-        "hours": 0,
-        "days": 0
-    }
+    """Calculate electricity costs with user input
+    Returns JSON:{'watts': 2023.0, 'rate': 0.12, 'hours': 4.0, 'days': 25.0} """
+    if session['csrf_token']:
+        calc_dict = {}
+        
+        for arg in request.args:
+            if request.args.get(arg):
+                calc_dict[arg] = float(request.args.get(arg))
+        print(calc_dict)
+        result = utils.calculate_consumption(calc_dict)
     
-    for arg in request.args:
-        if request.args.get(arg):
-            calc_dict[arg] = float(request.args.get(arg))
-    print(calc_dict)
-    result = utils.calculate_consumption(calc_dict)
-   
-    return jsonify(result)
+        return jsonify(result)
+    return redirect('/')
 
 @app.route("/grid")
 def return_grid_value():
     """Return grid cleanliness value. First call GeoNames API to get longitude and latitude, then call Watt Time API"""
-    zipcode = request.args.get('zipcode')
-    #Todo: URL for Canada and US http://api.geonames.org/postalCodeLookupJSON?postalcode=n4k5n8&country=CA&username=
-    geonames = "http://api.geonames.org/searchJSON"
-    resp_zip = requests.get(geonames, params={"q": zipcode, "username": GEONAMES_USER})
-    geodata = resp_zip.json()
-    lng = geodata['geonames'][0]['lng']
-    lat = geodata['geonames'][0]['lat']
-    
-    #Watt time API calls
-    wt_base_url = "https://api2.watttime.org/v2"
-    headers = {
-             'Authorization': 'Basic %s' % B64VAL
-            }
-    #login to WattTime to get token
-    watt_time_login_url = f"{wt_base_url}/login/"
-    watt_time_token = requests.get(watt_time_login_url, headers = headers).json()
-    
-    region_headers = {
-        'Authorization': 'Bearer %s' % watt_time_token['token']
-    }
-    
-    #get real time emissions for region
-    watt_time_emission_url = f"{wt_base_url}/index"
-    watt_emissions = requests.get(watt_time_emission_url, params={"latitude": lat, "longitude": lng}, headers=region_headers).json()
-    
-    return watt_emissions
+    if session['csrf_token']:
+        
+        zipcode = request.args.get('zipcode')
+        #Todo: URL for Canada and US http://api.geonames.org/postalCodeLookupJSON?postalcode=n4k5n8&country=CA&username=
+        geonames = "http://api.geonames.org/searchJSON"
+        resp_zip = requests.get(geonames, params={"q": zipcode, "username": GEONAMES_USER})
+        geodata = resp_zip.json()
+        lng = geodata['geonames'][0]['lng']
+        lat = geodata['geonames'][0]['lat']
+        
+        #Watt time API calls
+        wt_base_url = "https://api2.watttime.org/v2"
+        headers = {
+                'Authorization': 'Basic %s' % B64VAL
+                }
+        #login to WattTime to get token
+        watt_time_login_url = f"{wt_base_url}/login/"
+        watt_time_token = requests.get(watt_time_login_url, headers = headers).json()
+        
+        region_headers = {
+            'Authorization': 'Bearer %s' % watt_time_token['token']
+        }
+        
+        #get real time emissions for region
+        watt_time_emission_url = f"{wt_base_url}/index"
+        watt_emissions = requests.get(watt_time_emission_url, params={"latitude": lat, "longitude": lng}, headers=region_headers).json()
+        
+        return watt_emissions
+    return redirect('/')

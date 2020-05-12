@@ -1,9 +1,17 @@
 
+const csrfToken = $("#csrf_token")
 
 $("#appliance-select").change(async function() {
     let appliance = $(this).find("option:selected").val();
-    let resp = await axios.get(`/watts/${appliance}?nocache=` + new Date().getTime())
-     $("#watts").val(resp.data.watts)
+    let resp = await axios({
+        method: 'get', 
+        url: `/watts/${appliance}` + '?nocache=' + new Date().getTime(),
+        headers: {
+            "X-CSRFToken": csrfToken
+        }
+    })
+
+    $("#watts").val(resp.data.watts);
 })
 
 $("#submit-calc").on("click", async function(e){
@@ -17,10 +25,10 @@ $("#submit-calc").on("click", async function(e){
             rate: $("#rate").val(),
             hours: $("#hours").val(),
             days: $("#days").val()
-        }
-        // headers: {
-        //     "X-CSRFToken": csrfToken
-        //
+        },
+        headers: {
+            "X-CSRFToken": csrfToken
+        } 
     })
 
    //send request with zipcode to receive grid cleanliness
@@ -29,10 +37,10 @@ $("#submit-calc").on("click", async function(e){
         url: '/grid'  + '?nocache=' + new Date().getTime(),
         params: {
             zipcode: $("#zipcode").val()
+        },
+        headers: {
+            "X-CSRFToken": csrfToken
         }
-        // headers: {
-        //     "X-CSRFToken": csrfToken
-        // }
     })
 
     htmlCalcResults(calc_resp);

@@ -3,19 +3,22 @@ from models import db, connect_db, Appliance
 from collections import defaultdict
 
 def get_categories():
-    """Returns a dictionary of the appliances sorted by category
-    {'Kitchen': [(1, 'Coffee Maker'),
-              (2, 'Microwave Oven'),
-              (3, 'Toaster Oven'),
-              (39, 'Range Oven'),
-              (40, 'Dishwasher'),
-              (41, 'Refrigerator')],
-             'Lighting': [(4, '18-W Compact Fluorescent'),
-              (5, '60-W Incandescent Lamp'),
-              (6, '100-W Incandescent Lamp'),
-              (7, 'Torchiere Lamp-Halogen')],
-             'Bedroom and Bathroom': [(8, 'Hair Dryer'),
-              (9, 'Waterbed Heater')], ..."""
+    """Returns a list of tuples, of the appliances sorted by category
+    [('Kitchen', (
+        (1, 'Coffee Maker'),
+        (2, 'Microwave Oven'),
+        (3, 'Toaster Oven'),
+        (39, 'Range Oven'),
+        (40, 'Dishwasher'),
+        (41, 'Refrigerator'))),
+    ('Lighting': (
+        (4, '18-W Compact Fluorescent'),
+        (5, '60-W Incandescent Lamp'),
+        (6, '100-W Incandescent Lamp'),
+        (7, 'Torchiere Lamp-Halogen')],
+    ('Bedroom and Bathroom': (
+        (8, 'Hair Dryer'),
+        (9, 'Waterbed Heater'))), ...]"""
 
     all_appliances = Appliance.query.all()
     
