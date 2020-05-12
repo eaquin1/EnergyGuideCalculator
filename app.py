@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Appliance
 import requests
@@ -36,18 +36,21 @@ connect_db(app)
 def render_home():
     """Home page with calculator"""
     form = AddApplianceForm()
-
     appliances = utils.get_categories()
-    form.appliance.choices = [(10, "Taht"), (11, "NIce Wather")]
-    return render_template('index.html', appl = appliances, form=form)
+    
+    form.appliance.choices = appliances
+
+    return render_template('index.html', form=form)
 
 @app.route("/watts/<int:id>")
 def send_watts(id):
     """Return wattage of appliance"""
-
+    
+    
     appliance = Appliance.query.get_or_404(id)
     result = {"watts": appliance.watts}
     return jsonify(result)
+    
 
 @app.route("/calculate")
 def calculate():
@@ -61,7 +64,7 @@ def calculate():
     for arg in request.args:
         if request.args.get(arg):
             calc_dict[arg] = float(request.args.get(arg))
-
+    print(calc_dict)
     result = utils.calculate_consumption(calc_dict)
    
     return jsonify(result)

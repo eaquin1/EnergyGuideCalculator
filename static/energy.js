@@ -47,8 +47,8 @@ function htmlCalcResults(calc_resp) {
     let data = calc_resp.data;
     
     let htmlObj = {};
-    htmlObj["dailyEnergy"] = `<p>Daily energy consumption: ${data["daily_kWh"]} kWh</p>`;
-    htmlObj["annualEnergyConsump"] = `<p>Annual energy consumption: ${data["annual_consump"]} kWh</p>`;
+    htmlObj["dailyEnergy"] = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
+    htmlObj["annualEnergyConsump"] = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
     htmlObj["annualCost"] = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
     $("#calc-results").append(htmlObj["dailyEnergy"])
     $("#calc-results").append(htmlObj["annualEnergyConsump"])

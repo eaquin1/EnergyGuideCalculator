@@ -23,8 +23,10 @@ def get_categories():
 
     for appl in all_appliances:
        category_dict[appl.category].append((appl.id, appl.name))
+
+    category_choices = [(cat, tuple(val)) for (cat, val) in category_dict.items()]    
     
-    return category_dict
+    return category_choices
 
 def calculate_consumption(calc_dict):
     """Returns a dictionary of calculated energy costs

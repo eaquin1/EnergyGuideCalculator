@@ -7,46 +7,25 @@
     <form>
         {{ form.hidden_tag() }}
 
-       {{ form.appliance.label }}
-       {{form.appliance}}
+       {{ form.appliance.label(for_="appliance-select")}}
+       {{ form.appliance(class_="form-control", id="appliance-select") }}
 
-       <!-- {{form.appliance}} -->
-        <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> -->
-        <!-- <div class="form-group appliance-group active">
-        <label for="appliance-select">Choose an appliance:</label>
-            <select id="appliance-select" class="form-control">
-                {% for (category, values) in appl.items() %}
-                <optgroup label="{{category}}">
-                    {% for appliance in values%}
-                    <option id="id-{{ appliance[0] }}" value="{{ appliance[0] }}">{{ appliance[1] }}</option>
-                    {% endfor %}
-                </optgroup>
-                {% endfor %}
-            </select>
-        </div>
+       {{ form.watts.label }}
+       {{ form.watts(class_="form-control integer-input", placeholder=1000, id_="watts", value=1000) }}
 
-        <div class="form-group appliance-group">
-            <label for="watts">Wattage</label>
-            <input type="number" id="watts" name="watts" class="form-control integer-input" value=1000>
-        </div>
-        
-        <div class="form-group appliance-group">
-            <label for="rate">Utility Rate</label>
-            <input type="number" id="rate" value="0.12" name="rate" class="form-control integer-input">
-        </div>
-        <div class="form-group appliance-group">
-            <label for="hours">Hours Used per Day</label>
-            <input type="number" id="hours" min=0 max=24 value=0 name="hours" class="form-control integer-input">
-        </div>
-        <div class="form-group appliance-group">
-            <label for="days">Days Used per Year</label>
-            <input type="number" id="days" value=0 min=0 max=365 name="days" class="form-control integer-input">
-        </div>
-        <div class="form-group appliance-group">
-            <label for="zipcode">Zipcode</label>
-            <input type="text" id="zipcode" name="zipcode" class="form-control integer-input">
-        </div>
-        <button class="btn btn-lg btn-primary" id="submit-calc">Submit</button> -->
+       {{ form.rate.label }}
+       {{ form.rate(class_="form-control", placeholder=0.12, id="rate", value=0.12) }}
+
+       {{ form.hours.label }}
+       {{ form.hours(class_="form-control integer-input", id="hours") }}
+
+       {{ form.days.label }}
+       {{ form.days(class_="form-control integer-input", id="days") }}
+
+       {{ form.zipcode.label }}
+       {{ form.zipcode(class_="form-control", id="zipcode") }}
+
+       <button class="btn btn-lg btn-primary" id="submit-calc">Submit</button>
     </form>
     </div>
 </div>
