@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Energy Guide Calculator</title>
+    <link rel="icon" 
+    type="image/png" 
+    href="https://img.icons8.com/cotton/64/000000/owl--v1.png" />
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/minty/bootstrap.min.css" rel="stylesheet" integrity="sha384-4HfFay3AYJnEmbgRzxYWJk/Ka5jIimhB/Fssk7NGT9Tj3rkEChpSxLK0btOGzf2I" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/energy.css">
     <script src="https://unpkg.com/jquery"></script>
@@ -14,31 +17,34 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/">Login</a>
+                <a class="nav-link" href="/login">Login</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/">Register</a>
+                <a class="nav-link" href="/signup">Register</a>
             </li>
         </ul>
     </div>
     </nav>
     
     <div class="container mt-5">
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+
         {% block content %}
         {% endblock %}
     </div>
 
-    <footer class="fixed-bottom text-center mt-auto">
-        <div class="inner">
-            <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; Home Energy Saver;</p>
-        </div>
-    </footer>
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; Home Energy Saver;</p>
+    </nav>
+    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 <script src="/static/energy.js"></script>
 <!-- Optional JavaScript -->

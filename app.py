@@ -1,13 +1,14 @@
 
-from flask import Flask, render_template, request, jsonify, Response, redirect, session
+from flask import Flask, render_template, request, jsonify, Response, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, Appliance
+from models import db, connect_db, Appliance, User, UserSearch
 import requests
 from os import environ
-from forms import AddApplianceForm
+from forms import AddApplianceForm, NewUserForm, LoginUserForm
 from flask_wtf.csrf import CSRFProtect
 from API import login_watttime, retrieve_long_lat
 import utils
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -78,3 +79,45 @@ def return_grid_value():
         return json_emissions
     
     return redirect('/')
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    """Handle user signup
+    Create new user and add to DB"""
+    form = NewUserForm()
+    
+    if form.validate_on_submit():
+        try:
+            user = User.signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data
+            )
+            db.session.commit()
+            flash(f"Welcome to EnergyGuide, {user.username}", "secondary")
+        except IntegrityError:
+            flash("Username already taken", "danger")
+            return render_template('signup.html', form=form)
+        return redirect("/")
+    else:
+        return render_template('signup.html', form=form)    
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Handle user login."""
+
+    form = LoginUserForm()
+    print(form.validate())
+    if form.validate_on_submit():
+        print("hello?")
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+
+        if user:
+            
+            flash(f"Hello, {user.username}!", "success")
+            return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('login.html', form=form)

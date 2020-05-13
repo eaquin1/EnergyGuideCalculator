@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<form method="POST" id="user_form">
+{{ form.hidden_tag() }}
+{{ form.username.label(for_="username") }}
+{{ form.username(class_="form-control", id="username") }}
+
+{{ form.email.label(for_="email") }}
+{{ form.email(class_="form-control", id="email") }}
+
+{{ form.password.label(for_="password") }}
+{{ form.password(class_="form-control", id="password") }}
+
+    <button class="btn btn-primary btn-lg btn-block">Sign me up!</button>
+
+{% endblock %}
