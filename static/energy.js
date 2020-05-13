@@ -67,8 +67,12 @@ function htmlGridResults(grid_result) {
     $("#grid-results").empty()
 
     let grid_name_html = `<p> Grid: ${grid_result.data.ba}</p>`
-    let grid_emission = `<p> Current Emissions (%): ${grid_result.data.percent}`
-
+    let grid_emission = `<p> Current Emissions (%): ${grid_result.data.percent}</p>`
+    let location = `<p> ${grid_result.data.city}, ${grid_result.data.state} </p>`
+    let time = new Date()
+    let htmlTime = `<p> ${time.toLocaleDateString()}, ${time.toLocaleTimeString()}</p>`
     $("#grid-results").append(grid_name_html)
     $("#grid-results").append(grid_emission)
+    $("#grid-results").append(location)
+    $("#grid-results").append(htmlTime)
 }

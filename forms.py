@@ -11,7 +11,7 @@ class AddApplianceForm(FlaskForm):
     rate = FloatField('Utility Rate')
     hours = IntegerField('Hours used per day', validators=[NumberRange(min=1, max=24)])
     days = IntegerField('Days used per year', validators=[NumberRange(min=1, max=365)])
-    zipcode = IntegerField('Zipcode')
+    zipcode = StringField('Zipcode')
     
 class NewUserForm(FlaskForm):
     """Form for a new user"""
