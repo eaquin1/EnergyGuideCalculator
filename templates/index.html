@@ -32,7 +32,9 @@
 <div class="row justify-content-center">
 
     <div id="calc-results" class="m-5 col-sm-6 col-centered">
-
+        {% if current_user.is_authenticated %}
+        <button class="btn btn-info">Save</button>
+        {% endif %}
     </div>
     <div id="grid-results" class="m-5 col-sm-6 col-centered">
 

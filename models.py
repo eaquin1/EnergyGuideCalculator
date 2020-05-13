@@ -2,6 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_bcrypt import Bcrypt
+from flask_login import UserMixin
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -27,7 +28,7 @@ class Appliance(db.Model):
         a = self
         return f"<Appliance {a.id} {a.name} {a.watts} {a.category}>"
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """User Model"""
     __tablename__ = "users"
 

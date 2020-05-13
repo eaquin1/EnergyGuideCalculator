@@ -23,11 +23,21 @@
                 <a class="nav-link" href="/">About</a>
             </li>
             <li class="nav-item">
+            {% if not current_user.is_authenticated %}
                 <a class="nav-link" href="/login">Login</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/signup">Register</a>
             </li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/saved">Searches</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
     </nav>

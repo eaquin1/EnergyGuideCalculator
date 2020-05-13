@@ -9,6 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 from API import login_watttime, retrieve_long_lat
 import utils
 from sqlalchemy.exc import IntegrityError
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -32,6 +33,13 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 @app.route("/", methods=["GET", "POST"])
 def render_home():
@@ -80,6 +88,14 @@ def return_grid_value():
     
     return redirect('/')
 
+## USER ROUTES ##
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash('Successfully logged out', 'info')
+    return redirect('/')
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     """Handle user signup
@@ -98,6 +114,7 @@ def signup():
         except IntegrityError:
             flash("Username already taken", "danger")
             return render_template('signup.html', form=form)
+        login_user(user)
         return redirect("/")
     else:
         return render_template('signup.html', form=form)    
@@ -107,17 +124,19 @@ def login():
     """Handle user login."""
 
     form = LoginUserForm()
-    print(form.validate())
+    
     if form.validate_on_submit():
-        print("hello?")
         user = User.authenticate(form.username.data,
                                  form.password.data)
 
-        if user:
-            
+        if user is False:
+            flash('Invalid login credentials. Please try again', 'danger')     
+            return redirect("/login")
+        else:
+            login_user(user, remember=form.remember.data)
             flash(f"Hello, {user.username}!", "success")
-            return redirect("/")
-
-        flash("Invalid credentials.", 'danger')
+            return redirect('/')
 
     return render_template('login.html', form=form)
+
+    
