@@ -36,6 +36,5 @@ def login_watttime(coords):
     watt_emissions = requests.get(watt_time_emission_url, params={"latitude": coords['lat'], "longitude": coords['lng']}, headers=region_headers).json()
     watt_emissions['city'] = coords['city']
     watt_emissions['state'] = coords['state']
-    print(watt_emissions)
     
     return watt_emissions
