@@ -17,10 +17,24 @@ $("#appliance-select").change(async function() {
 
 $("#submit-calc").on("click", async function(e){
     e.preventDefault();
-    let rotation = 180 * 0.45
-  
-    // send request to calculate the usage costs
-    let calc_resp = await axios({
+    
+    
+
+    await calcResp().then(response => {
+        htmlCalcResults(response)
+    })
+    
+    await calcGrid().then(response => {
+        htmlGridResults(response);
+    })
+   
+   
+   
+})
+
+//Axios request for calculated energy
+async function calcResp() {
+    const resp = await axios({
         method: 'get',
         url: '/calculate' + '?nocache=' + new Date().getTime(),
         params: {
@@ -34,8 +48,12 @@ $("#submit-calc").on("click", async function(e){
         } 
     })
 
-   //send request with zipcode to receive grid cleanliness
-    let zip_resp = await axios({
+    return resp
+}
+
+//Axios request for grid information
+async function calcGrid() {
+    const resp = await axios({
         method: 'get',
         url: '/grid'  + '?nocache=' + new Date().getTime(),
         params: {
@@ -46,11 +64,8 @@ $("#submit-calc").on("click", async function(e){
         }
     })
 
-    htmlCalcResults(calc_resp);
-    htmlGridResults(zip_resp);
-    
-   
-})
+    return resp
+}
 
 //Turn calculated energy results into HTML
 function htmlCalcResults(calc_resp) {
@@ -80,6 +95,7 @@ function htmlGridResults(grid_result) {
     $("#grid-results").append(grid_emission);
     $("#grid-results").append(location);
     $("#grid-results").append(htmlTime);
+    console.log(grid_result)
     controlTicker(grid_result.data.percent)
 }
 
@@ -89,6 +105,7 @@ function controlTicker(gridpercent) {
     let rotation = 180 * (gridpercent/100)
     
     const tick = document.querySelector('.scorer-1-tick')
+    
     tick.style.transformOrigin = "right center"
     tick.style.transform = `rotate(${rotation}deg)`
    
