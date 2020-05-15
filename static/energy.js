@@ -87,7 +87,7 @@ function htmlGridResults(grid_result) {
 function controlTicker(gridpercent) {
 
     let rotation = 180 * (gridpercent/100)
-    console.log(gridpercent)
+    
     const tick = document.querySelector('.scorer-1-tick')
     const style = document.createElement('style');
     style.textContent = ` @keyframes ticker-mover-1 {
@@ -97,11 +97,11 @@ function controlTicker(gridpercent) {
     }
     33% {
       transform-origin: right center;
-      transform: rotate(${rotation}deg);
+      transform: rotate(${rotation -10}deg);
     }
     66% {
       transform-origin: right center;
-      transform: rotate(${rotation}deg);
+      transform: rotate(${rotation -5}deg);
     } 
     100% {
       transform-origin:right center;
