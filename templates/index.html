@@ -25,37 +25,45 @@
        {{ form.zipcode.label }}
        {{ form.zipcode(class_="form-control", id="zipcode") }}
 
-       <button class="btn btn-lg btn-primary mt-4" id="submit-calc">Submit</button>
+       <button class="btn btn-lg btn-primary mt-4" id="submit-calc" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapse1 multiCollapse2">Submit</button>
     </form>
     </div>
 </div>
 <div class="row justify-content-center">
-
-    <div id="calc-results" class="col-sm-6 col-centered">
-        {% if current_user.is_authenticated %}
-        <button class="btn btn-info">Save</button>
-        {% endif %}
+    <div class="col-sm-6">
+        <div class="collapse multi-collapse" id="multiCollapse1">
+            <div id="grid-results" class="card card-body"></div>
+        </div>
     </div>
-    <div id="grid-results" class="col-sm-6 col-centered">
 
+
+    <div class="col-sm-6">
+        <div class="collapse multi-collapse" id="multiCollapse2">
+            <div class="card card-body" id="calc-results">
+        <div id="main-div">
+            <!-- Scorer 1 Starts -->
+            <div class="layout-align">
+            <div id="score-meter-1" class="layout-align">
+                <div id="scorer-1-inner-div">
+                    <div id="scorer-1-inner-div-5">
+                    <div class="scorer-1-tick">
+                    </div>
+                    </div>
+                </div>
+                <div id="scorer-1-inner-div-2"></div>
+                <div id="scorer-1-inner-div-3"></div>
+                <div id="scorer-1-inner-div-4"></div>
+            </div>
+            
+                {% if current_user.is_authenticated %}
+                <button class="btn btn-info">Save</button>
+                {% endif %}
+            </div>
+            </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<div id="main-div">
-    <!-- Scorer 1 Starts -->
-    <div class="layout-align">
-      <div id="score-meter-1" class="layout-align">
-      <div id="scorer-1-inner-div">
-        <div id="scorer-1-inner-div-5">
-          <div class="scorer-1-tick">
-          </div>
-        </div>
-      </div>
-      <div id="scorer-1-inner-div-2"></div>
-      <div id="scorer-1-inner-div-3"></div>
-      <div id="scorer-1-inner-div-4"></div>
-    </div>
-    </div>
 
 
 {% endblock %}
