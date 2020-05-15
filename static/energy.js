@@ -1,6 +1,7 @@
 
 const csrfToken = $("#csrf_token")
 
+
 $("#appliance-select").change(async function() {
     let appliance = $(this).find("option:selected").val();
     let resp = await axios({
@@ -16,6 +17,8 @@ $("#appliance-select").change(async function() {
 
 $("#submit-calc").on("click", async function(e){
     e.preventDefault();
+    let rotation = 180 * 0.45
+  
     // send request to calculate the usage costs
     let calc_resp = await axios({
         method: 'get',
@@ -46,6 +49,7 @@ $("#submit-calc").on("click", async function(e){
     htmlCalcResults(calc_resp);
     htmlGridResults(zip_resp);
     
+   
 })
 
 //Turn calculated energy results into HTML
@@ -76,4 +80,34 @@ function htmlGridResults(grid_result) {
     $("#grid-results").append(grid_emission);
     $("#grid-results").append(location);
     $("#grid-results").append(htmlTime);
+    controlTicker(grid_result.data.percent)
+}
+
+//set ticker hand to the correct percentage
+function controlTicker(gridpercent) {
+
+    let rotation = 180 * (gridpercent/100)
+    console.log(gridpercent)
+    const tick = document.querySelector('.scorer-1-tick')
+    const style = document.createElement('style');
+    style.textContent = ` @keyframes ticker-mover-1 {
+    0% {
+      transform-origin: right center;
+      transform: rotate(0deg);
+    }
+    33% {
+      transform-origin: right center;
+      transform: rotate(${rotation}deg);
+    }
+    66% {
+      transform-origin: right center;
+      transform: rotate(${rotation}deg);
+    } 
+    100% {
+      transform-origin:right center;
+      transform: rotate(${rotation}deg); 
+    }
+  } `
+    tick.append(style)
+    
 }
