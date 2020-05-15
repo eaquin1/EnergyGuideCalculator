@@ -89,25 +89,30 @@ function controlTicker(gridpercent) {
     let rotation = 180 * (gridpercent/100)
     
     const tick = document.querySelector('.scorer-1-tick')
-    const style = document.createElement('style');
-    style.textContent = ` @keyframes ticker-mover-1 {
-    0% {
-      transform-origin: right center;
-      transform: rotate(0deg);
-    }
-    33% {
-      transform-origin: right center;
-      transform: rotate(${rotation -10}deg);
-    }
-    66% {
-      transform-origin: right center;
-      transform: rotate(${rotation -5}deg);
-    } 
-    100% {
-      transform-origin:right center;
-      transform: rotate(${rotation}deg); 
-    }
-  } `
-    tick.append(style)
+    tick.style.transformOrigin = "right center"
+    tick.style.transform = `rotate(${rotation}deg)`
+   
+    
+//     const tick = document.querySelector('.scorer-1-tick')
+//     const style = document.createElement('style');
+//     style.textContent = ` @keyframes ticker-mover-1 {
+//     0% {
+//       transform-origin: right center;
+//       transform: rotate(0deg);
+//     }
+//     33% {
+//       transform-origin: right center;
+//       transform: rotate(${rotation -10}deg);
+//     }
+//     66% {
+//       transform-origin: right center;
+//       transform: rotate(${rotation -5}deg);
+//     } 
+//     100% {
+//       transform-origin:right center;
+//       transform: rotate(${rotation}deg); 
+//     }
+//   } `
+//     tick.append(style)
     
 }
