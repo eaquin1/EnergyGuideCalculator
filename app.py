@@ -13,6 +13,7 @@ from flask_login import LoginManager, current_user, login_required, login_user, 
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
+
 # use local development config vars if folder exists, otherwise use environment vars
 # '/config' folder should never be tracked in source control!
 import importlib
@@ -41,22 +42,24 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def render_home():
     """Home page with calculator"""
     form = AddApplianceForm()
     appliances = utils.get_categories()
     
     form.appliance.choices = appliances
-
+    
     return render_template('index.html', form=form)
 
 @app.route("/watts/<int:id>")
 def send_watts(id):
     """Return wattage of appliance"""
+   
     if session['csrf_token']:
         appliance = Appliance.query.get_or_404(id)
         result = {"watts": appliance.watts}
+       
         return jsonify(result)
     return redirect('/')
     
@@ -64,29 +67,42 @@ def send_watts(id):
 @app.route("/calculate")
 def calculate():
     """Calculate electricity costs with user input
-    Returns JSON:{'watts': 2023.0, 'rate': 0.12, 'hours': 4.0, 'days': 25.0} """
+    Returns JSON:{'watts': 2023.0, 'rate': 0.12, 'hours': 4.0, 'days': 25.0, 'freq': '300', 'ba': 'ERCOT_NORTH', 'percent': '55', 'point_time': '2020-05-16T22:55:00Z', 'city': 'Denton', 'state': 'Texas'} """
     if session['csrf_token']:
         calc_dict = {}
-        
+        #calculate electricity usage
         for arg in request.args:
             if request.args.get(arg):
                 calc_dict[arg] = float(request.args.get(arg))
         
         result = utils.calculate_consumption(calc_dict)
-    
-        return jsonify(result)
-    return redirect('/')
+        print("calc", result)
 
-@app.route("/grid")
-def return_grid_value():
-    """Return grid cleanliness value. First call GeoNames API to get longitude and latitude, then call Watt Time API"""
-    if session['csrf_token']:
+        # calculate cleanliness values and location values
         zipcode = request.args.get('zipcode')
         coords = retrieve_long_lat(zipcode)
         json_emissions = login_watttime(coords)
-        return json_emissions
-    
+
+        #add the results to the result dictionary
+        for key, value in json_emissions.items():
+            result[key] = value
+        
+        result["appliance_id"] = request.args.get('applianceId')
+        #if current_user.is_authenticated:
+        if session.get('search_key') == None:
+            session['search_key'] = []
+        else:
+            search = session['search_key']
+            search.append(result)
+            session['search_key'] = search
+        print(session['search_key'])
+        return jsonify(result)
     return redirect('/')
+
+
+# @app.route("/save", methods=["POST"])
+# def save_search():
+
 
 ## USER ROUTES ##
 

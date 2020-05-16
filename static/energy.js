@@ -15,7 +15,7 @@ $("#appliance-select").change(async function() {
     $("#watts").val(resp.data.watts);
 })
 
-$("#submit-calc").on("click", async function(e){
+$(".submit-calc").on("click", async function(e){
     e.preventDefault();
     
     
@@ -24,16 +24,16 @@ $("#submit-calc").on("click", async function(e){
         htmlCalcResults(response)
     })
     
-    await calcGrid().then(response => {
-        htmlGridResults(response);
-    })
+    // await calcGrid().then(response => {
+    //     htmlGridResults(response);
+    // })
    
-   
-   
+    $("#submit-form").trigger('reset');
 })
 
 //Axios request for calculated energy
 async function calcResp() {
+    console.log()
     const resp = await axios({
         method: 'get',
         url: '/calculate' + '?nocache=' + new Date().getTime(),
@@ -41,7 +41,9 @@ async function calcResp() {
             watts: $("#watts").val(),
             rate: $("#rate").val(),
             hours: $("#hours").val(),
-            days: $("#days").val()
+            days: $("#days").val(),
+            zipcode: $("#zipcode").val(),
+            applianceId: $("#appliance-select").val()
         },
         headers: {
             "X-CSRFToken": csrfToken
@@ -52,52 +54,54 @@ async function calcResp() {
 }
 
 //Axios request for grid information
-async function calcGrid() {
-    const resp = await axios({
-        method: 'get',
-        url: '/grid'  + '?nocache=' + new Date().getTime(),
-        params: {
-            zipcode: $("#zipcode").val()
-        },
-        headers: {
-            "X-CSRFToken": csrfToken
-        }
-    })
+// async function calcGrid() {
+//     const resp = await axios({
+//         method: 'get',
+//         url: '/grid'  + '?nocache=' + new Date().getTime(),
+//         params: {
+//             zipcode: $("#zipcode").val()
+//         },
+//         headers: {
+//             "X-CSRFToken": csrfToken
+//         }
+//     })
 
-    return resp
-}
+//     return resp
+// }
 
 //Turn calculated energy results into HTML
 function htmlCalcResults(calc_resp) {
     $("#calc-results").empty()
 
     let data = calc_resp.data;
+    console.log(data)
     
-    let htmlObj = {};
-    htmlObj["dailyEnergy"] = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
-    htmlObj["annualEnergyConsump"] = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
-    htmlObj["annualCost"] = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
-    $("#calc-results").append(htmlObj["dailyEnergy"]);
-    $("#calc-results").append(htmlObj["annualEnergyConsump"]);
-    $("#calc-results").append(htmlObj["annualCost"]); 
-}
+    let dailyEnergy = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
+    let annualEnergyConsump   = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
+    let annualCost = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
+    $("#calc-results").append(dailyEnergy);
+    $("#calc-results").append(annualEnergyConsump);
+    $("#calc-results").append(annualCost); 
 
-//Turn grid information into html
-function htmlGridResults(grid_result) {
     $("#grid-results").empty()
 
-    let grid_name_html = `<p> Grid: ${grid_result.data.ba}</p>`;
-    let grid_emission = `<p> Current Emissions (%): ${grid_result.data.percent}</p>`;
-    let location = `<p> ${grid_result.data.city}, ${grid_result.data.state} </p>`;
+    let grid_name_html = `<p> Grid: ${data["ba"]}</p>`;
+    let grid_emission = `<p> Current Emissions (%): ${data["percent"]}</p>`;
+    let location = `<p> ${data["city"]}, ${data["state"]} </p>`;
     let time = new Date();
     let htmlTime = `<p> ${time.toLocaleDateString()}, ${time.toLocaleTimeString()}</p>`;
     $("#grid-results").append(grid_name_html);
     $("#grid-results").append(grid_emission);
     $("#grid-results").append(location);
     $("#grid-results").append(htmlTime);
-    console.log(grid_result)
-    controlTicker(grid_result.data.percent)
+    
+    controlTicker(data["percent"])
 }
+
+//Turn grid information into html
+// function htmlGridResults(grid_result) {
+   
+// }
 
 //set ticker hand to the correct percentage
 function controlTicker(gridpercent) {

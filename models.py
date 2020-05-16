@@ -80,14 +80,14 @@ class UserSearch(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     appliance_id = db.Column(db.Integer, db.ForeignKey('appliances.id', ondelete='CASCADE'), nullable=False)
-    watts = db.Column(db.Float, nullable=False)
-    hours = db.Column(db.Integer, nullable=False)
-    days = db.Column(db.Integer, nullable=False)
+    daily_kWh = db.Column(db.Float, nullable=False)
+    annual_Consump = db.Column(db.Float, nullable=False)
+    annual_Cost = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     grid = db.Column(db.Text, nullable=False)
     gridpercent = db.Column(db.Integer, nullable=False)
-    zipcode = db.Column(db.Integer, nullable=False)
-
+    state = db.Column(db.Text, nullable=False)
+    city = db.Column(db.Text, nullable=False)
 
 
 
