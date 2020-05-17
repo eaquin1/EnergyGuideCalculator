@@ -35,7 +35,7 @@
                 <a class="nav-link" href="/logout">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/saved">Searches</a>
+                <a class="nav-link" href="/saved/{{current_user.id}}">Searches</a>
             </li>
             {% endif %}
         </ul>
@@ -55,7 +55,7 @@
         <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; Home Energy Saver;</p>
     </nav>
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>>
 <script src="/static/energy.js"></script>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

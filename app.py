@@ -69,11 +69,14 @@ def calculate():
     """Calculate electricity costs with user input
     Returns JSON:{'watts': 2023.0, 'rate': 0.12, 'hours': 4.0, 'days': 25.0, 'freq': '300', 'ba': 'ERCOT_NORTH', 'percent': '55', 'point_time': '2020-05-16T22:55:00Z', 'city': 'Denton', 'state': 'Texas'} """
     if session['csrf_token']:
+        if session.get('search_key') == None:
+            session['search_key'] = []
+
         calc_dict = {}
         #calculate electricity usage
         for arg in request.args:
             if request.args.get(arg):
-                calc_dict[arg] = float(request.args.get(arg))
+                calc_dict[arg] = request.args.get(arg)
         
         result = utils.calculate_consumption(calc_dict)
         print("calc", result)
@@ -88,20 +91,42 @@ def calculate():
             result[key] = value
         
         result["appliance_id"] = request.args.get('applianceId')
+        result["time"] = request.args.get('time')
         #if current_user.is_authenticated:
-        if session.get('search_key') == None:
-            session['search_key'] = []
-        else:
-            search = session['search_key']
-            search.append(result)
-            session['search_key'] = search
+     
+       
+        search = session['search_key']
+        search.append(result)
+        session['search_key'] = search
+        print('********************')
         print(session['search_key'])
+        print('********************')
         return jsonify(result)
     return redirect('/')
 
 
-# @app.route("/save", methods=["POST"])
-# def save_search():
+@app.route("/save", methods=["POST"])
+def save_search():
+    """Save a user search"""
+    if current_user.is_authenticated:
+        for search in session['search_key']:
+            search_values = UserSearch(
+                user_id = current_user.id,
+                appliance_id = search['appliance_id'],
+                daily_kWh = search['daily_kWh'],
+                annual_Consump = search['annual_consump'],
+                annual_Cost = search['annual_cost'],
+                timestamp = search['time'],
+                grid = search['ba'],
+                gridpercent = search['percent'],
+                state = search['state'],
+                city = search['city']
+            )
+            db.session.add(search_values)
+            db.session.commit()
+        session.pop('search_key')
+    return redirect("/")
+
 
 
 ## USER ROUTES ##
@@ -154,5 +179,13 @@ def login():
             return redirect('/')
 
     return render_template('login.html', form=form)
+
+@app.route("/saved/<int:id>")
+def show_list(id):
+    if current_user.is_authenticated:
+        searches = UserSearch.query.filter_by(user_id=id)
+        return render_template('searches.html', searches=searches)
+
+    return redirect('/')
 
     

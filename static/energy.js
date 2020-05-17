@@ -15,7 +15,7 @@ $("#appliance-select").change(async function() {
     $("#watts").val(resp.data.watts);
 })
 
-$(".submit-calc").on("click", async function(e){
+$("#submit-calc").on("click", async function(e){
     e.preventDefault();
     
     
@@ -31,6 +31,11 @@ $(".submit-calc").on("click", async function(e){
     $("#submit-form").trigger('reset');
 })
 
+// $("#search-btn").on("click", async function(e){
+//     e.preventDefault();
+//     await saveSearch();
+// })
+
 //Axios request for calculated energy
 async function calcResp() {
     console.log()
@@ -43,7 +48,8 @@ async function calcResp() {
             hours: $("#hours").val(),
             days: $("#days").val(),
             zipcode: $("#zipcode").val(),
-            applianceId: $("#appliance-select").val()
+            applianceId: $("#appliance-select").val(),
+            time: new Date()
         },
         headers: {
             "X-CSRFToken": csrfToken
@@ -53,20 +59,15 @@ async function calcResp() {
     return resp
 }
 
-//Axios request for grid information
-// async function calcGrid() {
+//Axios request for saving searches
+// async function saveSearch() {
 //     const resp = await axios({
-//         method: 'get',
-//         url: '/grid'  + '?nocache=' + new Date().getTime(),
-//         params: {
-//             zipcode: $("#zipcode").val()
-//         },
+//         method: 'post',
+//         url: '/save'  + '?nocache=' + new Date().getTime(),
 //         headers: {
 //             "X-CSRFToken": csrfToken
 //         }
 //     })
-
-//     return resp
 // }
 
 //Turn calculated energy results into HTML
@@ -75,33 +76,39 @@ function htmlCalcResults(calc_resp) {
 
     let data = calc_resp.data;
     console.log(data)
-    
+    //create calculation div 
+    const $calcDiv = $('<div/>', {
+        'class': 'card card-body'
+    });
+
     let dailyEnergy = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
     let annualEnergyConsump   = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
     let annualCost = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
-    $("#calc-results").append(dailyEnergy);
-    $("#calc-results").append(annualEnergyConsump);
-    $("#calc-results").append(annualCost); 
+   $calcDiv.append(dailyEnergy);
+   $calcDiv.append(annualEnergyConsump);
+   $calcDiv.append(annualCost); 
 
-    $("#grid-results").empty()
+    $("#calc-results").append($calcDiv);
+
+    //create grid div
+    const $gridDiv = $('<div/>', {
+        'class': 'card card-body'
+    });
 
     let grid_name_html = `<p> Grid: ${data["ba"]}</p>`;
     let grid_emission = `<p> Current Emissions (%): ${data["percent"]}</p>`;
     let location = `<p> ${data["city"]}, ${data["state"]} </p>`;
     let time = new Date();
     let htmlTime = `<p> ${time.toLocaleDateString()}, ${time.toLocaleTimeString()}</p>`;
-    $("#grid-results").append(grid_name_html);
-    $("#grid-results").append(grid_emission);
-    $("#grid-results").append(location);
-    $("#grid-results").append(htmlTime);
+    $gridDiv.append(grid_name_html);
+    $gridDiv.append(grid_emission);
+    $gridDiv.append(location);
+    $gridDiv.append(htmlTime);
     
+    $("#grid-results").append($gridDiv);
     controlTicker(data["percent"])
 }
 
-//Turn grid information into html
-// function htmlGridResults(grid_result) {
-   
-// }
 
 //set ticker hand to the correct percentage
 function controlTicker(gridpercent) {
