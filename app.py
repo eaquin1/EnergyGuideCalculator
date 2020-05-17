@@ -127,6 +127,13 @@ def save_search():
         session.pop('search_key')
     return redirect("/")
 
+@app.route("/delete-search/<int:id>", methods=["POST"])
+@login_required
+def delete_search(id):
+    search = UserSearch.query.get_or_404(id)
+    db.session.delete(search)
+    db.session.commit()
+    return redirect(f"/saved/{current_user.id}")
 
 
 ## USER ROUTES ##
@@ -181,6 +188,7 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route("/saved/<int:id>")
+@login_required
 def show_list(id):
     if current_user.is_authenticated:
         searches = UserSearch.query.filter_by(user_id=id)

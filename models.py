@@ -89,6 +89,11 @@ class UserSearch(db.Model):
     state = db.Column(db.Text, nullable=False)
     city = db.Column(db.Text, nullable=False)
 
+    @property
+    def friendly_date(self):
+        """"Return user friendly date"""
+        return f'{self.timestamp.strftime("%b %d %Y %H:%M %p")}'
+
 
 
 

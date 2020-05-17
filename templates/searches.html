@@ -1,8 +1,25 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<h1 class="text-center">Searches for {{searches[0].users.username}}</h1>
+<div class="row justify-content-center">
 {%for search in searches%}
-<p>{{search.appliances.name}}</p>
-<p>{{search.state}}</p>
-{% endfor %}
+
+<div class="card m-1" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{search.friendly_date}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{search.appliances.name}}</h6>
+      <p class="card-text">Daily kWh: {{"{:.2f}".format(search.daily_kWh)}}</p>
+      <p class="card-text">Annual Consumption: {{"{:.2f}".format(search.annual_Consump)}}</p>
+      <p class="card-text">Annual Cost: ${{search.annual_Cost}}</p>
+      <p class="card-text">Grid and Percentage: {{search.grid}}, {{search.gridpercent}}%</p>
+      <p class="card-text">Location: {{search.city}}, {{search.state}}</p>
+      <form action="/delete-search/{{search.id}}"  method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>    
+        <button class="btn btn-sm btn-warning">Delete</button>
+     </form>
+    </div>
+  </div>
+
+{% endfor %}</div>
 {% endblock %}
