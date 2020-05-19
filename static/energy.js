@@ -1,7 +1,7 @@
 
 const csrfToken = $("#csrf_token")
 
-
+//Autopopulate the average kWh for the chosen appliance
 $("#appliance-select").change(async function() {
     let appliance = $(this).find("option:selected").val();
     let resp = await axios({
@@ -15,30 +15,43 @@ $("#appliance-select").change(async function() {
     $("#watts").val(resp.data.watts);
 })
 
+//Use geolocation if a user allows
+$("#gps").on("click", async function(e){
+    e.preventDefault()
+    geoFindMe()
+})
+
+//Autopopulate the average price for a region, based on the entered location
+$("#zipcode").on("change", async function(){
+    let postalcode = $("#zipcode").attr('data-place');
+    console.log(postalcode)
+    let resp = await axios({
+        method: 'get',
+        url: `/rates/${postalcode}` + '?nocache=' + new Date().getTime(),
+        headers: {
+            "X-CSRFToken": csrfToken
+        }
+    })
+
+    $('#rate').val(resp.data.rate)
+})
+//submit appliance search form
 $("#submit-calc").on("click", async function(e){
     e.preventDefault();
-    
     
 
     await calcResp().then(response => {
         htmlCalcResults(response)
     })
     
-    // await calcGrid().then(response => {
-    //     htmlGridResults(response);
-    // })
    
     $("#submit-form").trigger('reset');
 })
 
-// $("#search-btn").on("click", async function(e){
-//     e.preventDefault();
-//     await saveSearch();
-// })
 
 //Axios request for calculated energy
 async function calcResp() {
-    console.log()
+    
     const resp = await axios({
         method: 'get',
         url: '/calculate' + '?nocache=' + new Date().getTime(),
@@ -75,7 +88,7 @@ function htmlCalcResults(calc_resp) {
     $("#calc-results").empty()
 
     let data = calc_resp.data;
-    console.log(data)
+   
     //create calculation div 
     const $calcDiv = $('<div/>', {
         'class': 'card card-body'
@@ -119,28 +132,51 @@ function controlTicker(gridpercent) {
     
     tick.style.transformOrigin = "right center"
     tick.style.transform = `rotate(${rotation}deg)`
-   
-    
-//     const tick = document.querySelector('.scorer-1-tick')
-//     const style = document.createElement('style');
-//     style.textContent = ` @keyframes ticker-mover-1 {
-//     0% {
-//       transform-origin: right center;
-//       transform: rotate(0deg);
-//     }
-//     33% {
-//       transform-origin: right center;
-//       transform: rotate(${rotation -10}deg);
-//     }
-//     66% {
-//       transform-origin: right center;
-//       transform: rotate(${rotation -5}deg);
-//     } 
-//     100% {
-//       transform-origin:right center;
-//       transform: rotate(${rotation}deg); 
-//     }
-//   } `
-//     tick.append(style)
-    
+       
 }
+
+//Find postcode of user using geolocation
+function geoFindMe() {
+   
+    const zipcode = $("#zipcode");
+    const help = $("#help-location")
+    
+  
+    async function success(position) {
+      const lat  = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+        
+        const resp = await axios({
+            method: 'get',
+            url: '/zipcode' + '?nocache=' + new Date().getTime(),
+            params: {
+                lat: lat,
+                lng: lng
+            },
+            headers: {
+                "X-CSRFToken": csrfToken
+            } 
+        })
+
+        zipcode.val(resp.data.zip)
+        zipcode.attr('data-place', resp.data.state)
+    }
+  
+    function error() {
+      help.textContent = 'Unable to retrieve your location';
+    }
+  
+    if(!navigator.geolocation) {
+      help.textContent = 'Geolocation is not supported by your browser';
+    } else {
+      help.textContent = 'Locating…';
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  
+  }
+  
+
+  
+
+  

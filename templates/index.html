@@ -1,6 +1,7 @@
 {% extends 'base.html'%}
 
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-sm-6 col-centered border border-info rounded px-5 py-3">
     <div class="title text-center">Appliance Energy Calculator</div>
@@ -23,7 +24,9 @@
        {{ form.days(class_="form-control integer-input", id="days") }}
 
        {{ form.zipcode.label (for_="zipcode")}}
+       <button class="btn btn-sm btn-info" id="gps">Use GPS</button>
        {{ form.zipcode(class_="form-control", id="zipcode") }}
+       <small id="help-location"></small>
 
        <button class="btn btn-lg btn-primary mt-4" id="submit-calc">Submit</button>
     </form>

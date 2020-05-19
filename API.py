@@ -8,14 +8,24 @@ def retrieve_long_lat(arg):
     elif(len(arg) == 5):
         country = 'US'
     geonames = "http://api.geonames.org/postalCodeLookupJSON"
-    resp_zip = requests.get(geonames, params={"postalcode": arg, "country": country, "username": GEONAMES_USER})
-    geodata = resp_zip.json()
+    resp_coords = requests.get(geonames, params={"postalcode": arg, "username": GEONAMES_USER})
+    geodata = resp_coords.json()
     location_dict['lng'] = geodata['postalcodes'][0]['lng']
     location_dict['lat'] = geodata['postalcodes'][0]['lat']
     location_dict['city'] = geodata['postalcodes'][0]['placeName']
     location_dict['state'] = geodata['postalcodes'][0]['adminName1']
 
     return location_dict
+
+def retrieve_zipcode(lng, lat):
+    zip_dict = {}
+    geonames = "http://api.geonames.org/findNearbyPostalCodesJSON?"
+    resp = requests.get(geonames, params={"lat": lat, "lng": lng, "username": GEONAMES_USER})
+    geodata = resp.json()
+    zip_dict["zip"] = geodata['postalCodes'][0]['postalCode']
+    zip_dict["state"] = geodata['postalCodes'][0]['adminName1']
+
+    return zip_dict
 
 def login_watttime(coords):
     #Watt time API calls

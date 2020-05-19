@@ -5,7 +5,7 @@ from models import db, connect_db, Appliance, User, UserSearch, Utility
 from os import environ
 from forms import AddApplianceForm, NewUserForm, LoginUserForm
 from flask_wtf.csrf import CSRFProtect
-from API import login_watttime, retrieve_long_lat
+from API import login_watttime, retrieve_long_lat, retrieve_zipcode
 import utils
 from sqlalchemy.exc import IntegrityError
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
@@ -47,10 +47,10 @@ def render_home():
     form = AddApplianceForm()
     #get appliances and utility rates from the database
     appliances = utils.get_categories()
-    utility_rates = utils.get_utility_rates
+    #utility_rates = utils.get_utility_rates()
     #populate select fields with database rates
     form.appliance.choices = appliances
-    form.rate.choices = utility_rates
+    #form.rate.choices = utility_rates
     
     return render_template('index.html', form=form)
 
@@ -137,6 +137,19 @@ def delete_search(id):
     db.session.commit()
     return redirect(f"/saved/{current_user.id}")
 
+@app.route("/zipcode")
+def look_up_zipcode():
+    lat = request.args.get('lat')
+    lng = request.args.get('lng')
+    postal_code = retrieve_zipcode(lng, lat)
+
+    return jsonify(postal_code)
+
+@app.route("/rates/<location>")
+def find_rate(location):
+    state = Utility.query.filter(Utility.location == location).first()
+    result = {"rate": state.rate}
+    return jsonify(result)
 
 ## USER ROUTES ##
 
