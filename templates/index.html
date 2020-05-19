@@ -10,19 +10,19 @@
        {{ form.appliance.label(for_="appliance-select")}}
        {{ form.appliance(class_="form-control", id="appliance-select") }}
 
-       {{ form.watts.label }}
+       {{ form.watts.label(for_="watts")}}
        {{ form.watts(class_="form-control integer-input", placeholder=1000, id_="watts", value=1000) }}
 
-       {{ form.rate.label }}
-       {{ form.rate(class_="form-control", placeholder=0.12, id="rate", value=0.12) }}
+       {{ form.rate.label (for_="rate")}}
+       {{ form.rate(class_="form-control integer-input", id="rate") }}
 
-       {{ form.hours.label }}
+       {{ form.hours.label (for_="hours")}}
        {{ form.hours(class_="form-control integer-input", id="hours") }}
 
-       {{ form.days.label }}
+       {{ form.days.label (for_="days")}}
        {{ form.days(class_="form-control integer-input", id="days") }}
 
-       {{ form.zipcode.label }}
+       {{ form.zipcode.label (for_="zipcode")}}
        {{ form.zipcode(class_="form-control", id="zipcode") }}
 
        <button class="btn btn-lg btn-primary mt-4" id="submit-calc">Submit</button>

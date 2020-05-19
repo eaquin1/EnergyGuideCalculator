@@ -1,5 +1,5 @@
 from app import db
-from models import db, connect_db, Appliance
+from models import db, connect_db, Appliance, Utility
 from collections import defaultdict
 
 def get_categories():
@@ -30,6 +30,25 @@ def get_categories():
     category_choices = [(cat, tuple(val)) for (cat, val) in category_dict.items()]    
     
     return category_choices
+
+def get_utility_rates():
+    """Returns a list of tuples, of the utility rates sorted by location
+    [('US Average Rate', (
+        (12.79, 12.79))),
+    ('Middle Atlantic', (
+        (15.41, 15.41))),
+    ('New Jersey', (
+        (15.43, 15.43))))..."""
+
+    all_rates = Utility.query.all()
+
+    rate_dict = defaultdict(list)
+    for rate in all_rates:
+       rate_dict[rate.location].append((rate.id, rate.rate))
+
+    rate_choices =[(cat, tuple(val)) for (cat, val) in rate_dict.items()] 
+
+    return rate_choices
 
 def calculate_consumption(calc_dict):
     """Returns a dictionary of calculated energy costs

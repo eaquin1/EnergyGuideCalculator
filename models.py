@@ -94,6 +94,14 @@ class UserSearch(db.Model):
         """"Return user friendly date"""
         return f'{self.timestamp.strftime("%b %d %Y %H:%M %p")}'
 
+class Utility(db.Model):
+    """Average utility rates by location"""
+    __tablename__ = 'utilities'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    location = db.Column(db.Text, nullable=False)
+    rate = db.Column(db.Float, nullable=False)
+
 
 
 

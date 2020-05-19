@@ -1,8 +1,7 @@
 
 from flask import Flask, render_template, request, jsonify, Response, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, Appliance, User, UserSearch
-import requests
+from models import db, connect_db, Appliance, User, UserSearch, Utility
 from os import environ
 from forms import AddApplianceForm, NewUserForm, LoginUserForm
 from flask_wtf.csrf import CSRFProtect
@@ -46,9 +45,12 @@ def load_user(user_id):
 def render_home():
     """Home page with calculator"""
     form = AddApplianceForm()
+    #get appliances and utility rates from the database
     appliances = utils.get_categories()
-    
+    utility_rates = utils.get_utility_rates
+    #populate select fields with database rates
     form.appliance.choices = appliances
+    form.rate.choices = utility_rates
     
     return render_template('index.html', form=form)
 
@@ -196,4 +198,14 @@ def show_list(id):
 
     return redirect('/')
 
-    
+#     [('New England', ((21.63, 21.63), (21.63, 21.63))),
+#  ('Connecticut', ((21.93, 21.93), (21.63, 21.63))),
+#  ('Maine', ((16.79, 16.79), (21.63, 21.63))),
+#  ('Massachusetts', ((22.91, 22.91), (21.63, 21.63))),
+#  ('New Hampshire', ((20.23, 20.23), (21.63, 21.63))),
+#  ('Rhode Island', ((24.24, 24.24), (21.63, 21.63))),
+#  ('Vermont', ((19.27, 19.27), (21.63, 21.63))),
+#  ('Middle Atlantic', ((15.41, 15.41), (21.63, 21.63))),
+#  ('New Jersey', ((15.43, 15.43), (21.63, 21.63))),
+#  ('New York', ((17.55, 17.55), (21.63, 21.63))),
+#  ('Pennsylvania', ((13.63, 13.63), (21.63, 21.63)))]

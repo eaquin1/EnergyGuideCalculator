@@ -38,3 +38,8 @@ def login_watttime(coords):
     watt_emissions['state'] = coords['state']
     
     return watt_emissions
+
+# def util_rates():
+#     """Use OpenEI API to populate utility rate based on area"""
+
+#     openEI_base_url = "https://api.openei.org/utility_rates?version=3&format=json&"api_key=UTIL_API
