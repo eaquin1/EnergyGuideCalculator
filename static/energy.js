@@ -23,10 +23,11 @@ $("#gps").on("click", async function(e){
 
 //Autopopulate the average price for a region, based on the entered location
 $("#zipcode").on("blur", async function(){
-    let postalCode = $("#zipcode").val()
+    const postalCode = $("#zipcode").val();
+    const help =  $("#help-location");
 
     if (isValidPostalCode(postalCode)){
-    
+    help.text('')
     let resp = await axios({
         method: 'get',
         url: `/zipcode` + '?nocache=' + new Date().getTime(),
@@ -40,7 +41,7 @@ $("#zipcode").on("blur", async function(){
 
     $('#rate').val(resp.data.rate)
     } else {
-        $("#help-location").text("Please enter a valid postal code")
+       help.text("Please enter a valid postal code")
     }
 })
 //submit appliance search form
@@ -48,9 +49,9 @@ $("#submit-calc").on("click", async function(e){
     e.preventDefault();
     
 
-    await calcResp().then(response => {
-        htmlCalcResults(response)
-    })
+    await calcResp()//.then(response => {
+      //  htmlCalcResults(response)
+   // })
     
    
     $("#submit-form").trigger('reset');
@@ -76,8 +77,16 @@ async function calcResp() {
             "X-CSRFToken": csrfToken
         } 
     })
-
-    return resp
+    console.log(resp)
+    if (resp.data.errors){
+        console.log(resp.data.errors)
+        for (let err in resp.data.errors) {
+            errors = `<small class="form-text text-danger">${err}: ${resp.data.errors[err]} </small>}`
+            $(".errors").append(errors)
+        }
+    } else {
+    htmlCalcResults(resp)
+    }
 }
 
 //Axios request for saving searches
@@ -168,6 +177,7 @@ function geoFindMe() {
         })
         $('#rate').val(resp.data.rate)
         zipcode.val(resp.data.zip)
+        help.text('')
        
     }
   
@@ -176,12 +186,11 @@ function geoFindMe() {
     }
   
     if(!navigator.geolocation) {
-      help.textContent = 'Geolocation is not supported by your browser';
+      help.text('Geolocation is not supported by your browser');
     } else {
-      help.textContent = 'Locating…';
+      help.text('Locating…');
       navigator.geolocation.getCurrentPosition(success, error);
     }
-  
   }
   
   function isValidPostalCode(postalCode) {
@@ -193,7 +202,9 @@ function geoFindMe() {
         postalCodeRegex = /^([0-9]{5})(?:[-\s]*([0-9]{4}))?$/;
     } else if (pc.length == 3) {
         postalCodeRegex = /^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/;
-    } 
+    } else {
+        return false
+    }
 
     return postalCodeRegex.test(pc);
   }

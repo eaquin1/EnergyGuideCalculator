@@ -9,9 +9,13 @@
 
 {{ form.password.label(for_="password") }}
 {{ form.password(class_="form-control", id="password") }}
+{% if form.password.errors %}
+{% for error in form.password.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+{% endif %}
 
 {{ form.remember.label(for_="remember") }}
 {{ form.remember(class_="form-control", id="remember") }}
+
 
 <button class="btn btn-primary btn-lg btn-block">Log in!</button>
 
