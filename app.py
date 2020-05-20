@@ -81,12 +81,14 @@ def calculate():
                 calc_dict[arg] = request.args.get(arg)
         
         result = utils.calculate_consumption(calc_dict)
-        print("calc", result)
+       
 
-        # calculate cleanliness values and location values
-        zipcode = request.args.get('zipcode')
-        coords = retrieve_long_lat(zipcode)
-        json_emissions = login_watttime(coords)
+        # calculate cleanliness values
+        #todo change to session['lat'] session['lng']
+        print(session['location'])
+        lat = session['location'][0]['lat']
+        lng = session['location'][0]['lng']
+        json_emissions = login_watttime(lat, lng)
 
         #add the results to the result dictionary
         for key, value in json_emissions.items():
@@ -94,7 +96,8 @@ def calculate():
         
         result["appliance_id"] = request.args.get('applianceId')
         result["time"] = request.args.get('time')
-        #if current_user.is_authenticated:
+        result["city"] = session["location"][0]["city"]
+        result["state"] = session["location"][0]["state"]
      
        
         search = session['search_key']
@@ -139,17 +142,30 @@ def delete_search(id):
 
 @app.route("/zipcode")
 def look_up_zipcode():
-    lat = request.args.get('lat')
-    lng = request.args.get('lng')
-    postal_code = retrieve_zipcode(lng, lat)
+    
+    if request.args.get('zipcode'):
+        zipc = request.args.get('zipcode')
+        location_info = retrieve_long_lat(zipc)
+    else:
+        lat = request.args.get('lat')
+        lng = request.args.get('lng')
+        location_info = retrieve_zipcode(lng, lat)
+    
+    utility = Utility.query.filter(Utility.location == location_info["state"]).first()
+    location_info['rate'] = utility.rate
+    #add lng, lat, city, state to session
+    session['location'] = []
+    location = session['location']
+    location.append(location_info)
+    session['location'] = location
 
-    return jsonify(postal_code)
+    return jsonify(location_info)
 
-@app.route("/rates/<location>")
-def find_rate(location):
-    state = Utility.query.filter(Utility.location == location).first()
-    result = {"rate": state.rate}
-    return jsonify(result)
+# @app.route("/rates/<location>")
+# def find_rate(location):
+    
+#     result = {"rate": state.rate}
+#     return jsonify(result)
 
 ## USER ROUTES ##
 

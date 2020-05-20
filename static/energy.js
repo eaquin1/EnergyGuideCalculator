@@ -22,18 +22,26 @@ $("#gps").on("click", async function(e){
 })
 
 //Autopopulate the average price for a region, based on the entered location
-$("#zipcode").on("change", async function(){
-    let postalcode = $("#zipcode").attr('data-place');
-    console.log(postalcode)
+$("#zipcode").on("blur", async function(){
+    let postalCode = $("#zipcode").val()
+
+    if (isValidPostalCode(postalCode)){
+    
     let resp = await axios({
         method: 'get',
-        url: `/rates/${postalcode}` + '?nocache=' + new Date().getTime(),
+        url: `/zipcode` + '?nocache=' + new Date().getTime(),
+        params: {
+            zipcode: postalCode
+        },
         headers: {
             "X-CSRFToken": csrfToken
         }
     })
 
     $('#rate').val(resp.data.rate)
+    } else {
+        $("#help-location").text("Please enter a valid postal code")
+    }
 })
 //submit appliance search form
 $("#submit-calc").on("click", async function(e){
@@ -158,9 +166,9 @@ function geoFindMe() {
                 "X-CSRFToken": csrfToken
             } 
         })
-
+        $('#rate').val(resp.data.rate)
         zipcode.val(resp.data.zip)
-        zipcode.attr('data-place', resp.data.state)
+       
     }
   
     function error() {
@@ -176,7 +184,20 @@ function geoFindMe() {
   
   }
   
+  function isValidPostalCode(postalCode) {
+      pc = postalCode.toUpperCase()
+      
+    if(pc.length == 6){
+        postalCodeRegex = /^([A-Z][0-9][A-Z])\s*([0-9][A-Z][0-9])$/;
+    } else if (pc.length == 5) {
+        postalCodeRegex = /^([0-9]{5})(?:[-\s]*([0-9]{4}))?$/;
+    } else if (pc.length == 3) {
+        postalCodeRegex = /^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/;
+    } 
 
+    return postalCodeRegex.test(pc);
+  }
+    
   
 
   
