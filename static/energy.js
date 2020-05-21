@@ -45,99 +45,99 @@ $("#zipcode").on("blur", async function(){
     }
 })
 //submit appliance search form
-$("#submit-calc").on("click", async function(e){
-    e.preventDefault();
+// $("#submit-calc").on("click", async function(e){
+//     e.preventDefault();
     
 
-    await calcResp()//.then(response => {
-      //  htmlCalcResults(response)
-   // })
+//     await calcResp()//.then(response => {
+//       //  htmlCalcResults(response)
+//    // })
     
    
-    $("#submit-form").trigger('reset');
-})
+//     $("#submit-form").trigger('reset');
+// })
 
 
-//Axios request for calculated energy
-async function calcResp() {
+// //Axios request for calculated energy
+// async function calcResp() {
     
-    const resp = await axios({
-        method: 'get',
-        url: '/calculate' + '?nocache=' + new Date().getTime(),
-        params: {
-            watts: $("#watts").val(),
-            rate: $("#rate").val(),
-            hours: $("#hours").val(),
-            days: $("#days").val(),
-            zipcode: $("#zipcode").val(),
-            applianceId: $("#appliance-select").val(),
-            time: new Date()
-        },
-        headers: {
-            "X-CSRFToken": csrfToken
-        } 
-    })
-    console.log(resp)
-    if (resp.data.errors){
-        console.log(resp.data.errors)
-        for (let err in resp.data.errors) {
-            errors = `<small class="form-text text-danger">${err}: ${resp.data.errors[err]} </small>}`
-            $(".errors").append(errors)
-        }
-    } else {
-    htmlCalcResults(resp)
-    }
-}
-
-//Axios request for saving searches
-// async function saveSearch() {
 //     const resp = await axios({
-//         method: 'post',
-//         url: '/save'  + '?nocache=' + new Date().getTime(),
+//         method: 'get',
+//         url: '/calculate' + '?nocache=' + new Date().getTime(),
+//         params: {
+//             watts: $("#watts").val(),
+//             rate: $("#rate").val(),
+//             hours: $("#hours").val(),
+//             days: $("#days").val(),
+//             zipcode: $("#zipcode").val(),
+//             applianceId: $("#appliance-select").val(),
+//             time: new Date()
+//         },
 //         headers: {
 //             "X-CSRFToken": csrfToken
-//         }
+//         } 
 //     })
+//     console.log(resp)
+//     if (resp.data.errors){
+//         console.log(resp.data.errors)
+//         for (let err in resp.data.errors) {
+//             errors = `<small class="form-text text-danger">${err}: ${resp.data.errors[err]} </small>}`
+//             $(".errors").append(errors)
+//         }
+//     } else {
+//     htmlCalcResults(resp)
+//     }
 // }
 
-//Turn calculated energy results into HTML
-function htmlCalcResults(calc_resp) {
-    $("#calc-results").empty()
+// //Axios request for saving searches
+// // async function saveSearch() {
+// //     const resp = await axios({
+// //         method: 'post',
+// //         url: '/save'  + '?nocache=' + new Date().getTime(),
+// //         headers: {
+// //             "X-CSRFToken": csrfToken
+// //         }
+// //     })
+// // }
 
-    let data = calc_resp.data;
+// //Turn calculated energy results into HTML
+// function htmlCalcResults(calc_resp) {
+//     $("#calc-results").empty()
+
+//     let data = calc_resp.data;
    
-    //create calculation div 
-    const $calcDiv = $('<div/>', {
-        'class': 'card card-body'
-    });
+//     //create calculation div 
+//     const $calcDiv = $('<div/>', {
+//         'class': 'card card-body'
+//     });
 
-    let dailyEnergy = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
-    let annualEnergyConsump   = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
-    let annualCost = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
-   $calcDiv.append(dailyEnergy);
-   $calcDiv.append(annualEnergyConsump);
-   $calcDiv.append(annualCost); 
+//     let dailyEnergy = `<p>Daily energy consumption: ${data["daily_kWh"].toFixed(2)} kWh</p>`;
+//     let annualEnergyConsump   = `<p>Annual energy consumption: ${data["annual_consump"].toFixed(2)} kWh</p>`;
+//     let annualCost = `<p>Annual cost: <b>$${data["annual_cost"].toFixed(2)}/year</b></p>`;
+//    $calcDiv.append(dailyEnergy);
+//    $calcDiv.append(annualEnergyConsump);
+//    $calcDiv.append(annualCost); 
 
-    $("#calc-results").append($calcDiv);
+//     $("#calc-results").append($calcDiv);
 
-    //create grid div
-    const $gridDiv = $('<div/>', {
-        'class': 'card card-body'
-    });
+//     //create grid div
+//     const $gridDiv = $('<div/>', {
+//         'class': 'card card-body'
+//     });
 
-    let grid_name_html = `<p> Grid: ${data["ba"]}</p>`;
-    let grid_emission = `<p> Current Emissions (%): ${data["percent"]}</p>`;
-    let location = `<p> ${data["city"]}, ${data["state"]} </p>`;
-    let time = new Date();
-    let htmlTime = `<p> ${time.toLocaleDateString()}, ${time.toLocaleTimeString()}</p>`;
-    $gridDiv.append(grid_name_html);
-    $gridDiv.append(grid_emission);
-    $gridDiv.append(location);
-    $gridDiv.append(htmlTime);
+//     let grid_name_html = `<p> Grid: ${data["ba"]}</p>`;
+//     let grid_emission = `<p> Current Emissions (%): ${data["percent"]}</p>`;
+//     let location = `<p> ${data["city"]}, ${data["state"]} </p>`;
+//     let time = new Date();
+//     let htmlTime = `<p> ${time.toLocaleDateString()}, ${time.toLocaleTimeString()}</p>`;
+//     $gridDiv.append(grid_name_html);
+//     $gridDiv.append(grid_emission);
+//     $gridDiv.append(location);
+//     $gridDiv.append(htmlTime);
     
-    $("#grid-results").append($gridDiv);
-    controlTicker(data["percent"])
-}
+//     $("#grid-results").append($gridDiv);
+//     controlTicker(data["percent"])
+// }
 
 
 //set ticker hand to the correct percentage

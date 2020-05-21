@@ -53,7 +53,21 @@ def render_home():
     #form.rate.choices = utility_rates
     
     if form.validate_on_submit():
-        return "<h2>Ah Oui!</h2>"
+        result = utils.calculate_consumption(form.watts.data, form.hours.data, form.days.data, form.rate.data)
+        lat = session['location'][0]['lat']
+        lng = session['location'][0]['lng']
+        json_emissions = login_watttime(lat, lng)
+        
+        for key, value in json_emissions.items():
+            result[key] = value
+            
+        result["appliance_id"] = request.args.get('applianceId')
+        result["time"] = request.args.get('time')
+        result["city"] = session["location"][0]["city"]
+        result["state"] = session["location"][0]["state"]
+        print("results", result)
+        return render_template("results.html", result=result)
+    
     return render_template('index.html', form=form)
 
 @app.route("/watts/<int:id>")
