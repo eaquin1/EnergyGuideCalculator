@@ -57,7 +57,7 @@ def calculate_consumption(calc_dict):
     calculations = {}
     
     calculations["daily_kWh"] = (float(calc_dict["watts"]) * float(calc_dict["hours"])) / 1000
-    calculations["annual_consump"] = calculations["daily_kWh"] * float(calc_dict["days"])
+    calculations["annual_consump"] = calculations["daily_kWh"]/100 * float(calc_dict["days"])
     calculations["annual_cost"] = calculations["annual_consump"] * float(calc_dict["rate"])
 
     return calculations

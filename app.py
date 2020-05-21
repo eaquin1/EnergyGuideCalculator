@@ -98,7 +98,7 @@ def calculate():
         result["time"] = request.args.get('time')
         result["city"] = session["location"][0]["city"]
         result["state"] = session["location"][0]["state"]
-     
+        
        
         search = session['search_key']
         search.append(result)

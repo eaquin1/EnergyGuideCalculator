@@ -7,15 +7,6 @@
     <div class="title text-center">Appliance Energy Calculator</div>
     <form id="submit-form">
         {{ form.hidden_tag() }}
-        {% if form.errors %}
-        <ul class="errors">
-            <!-- {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-                {% for error in field_errors %}
-                    <li>{{ form[field_name].label }}: {{ error }}</li>
-                {% endfor %}
-            {% endfor %} -->
-        </ul>
-    {% endif %}
    
         {{ form.zipcode.label (for_="zipcode")}}
        <button class="btn btn-sm btn-info" id="gps">Use GPS</button>
