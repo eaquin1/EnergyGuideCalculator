@@ -51,8 +51,12 @@ def render_home():
     #populate select fields with database rates
     form.appliance.choices = appliances
     #form.rate.choices = utility_rates
-    
+    if session.get('search_key') == None:
+        session['search_key'] = []
+
     if form.validate_on_submit():
+        
+        
         result = utils.calculate_consumption(form.watts.data, form.hours.data, form.days.data, form.rate.data)
         lat = session['location'][0]['lat']
         lng = session['location'][0]['lng']
@@ -61,11 +65,17 @@ def render_home():
         for key, value in json_emissions.items():
             result[key] = value
             
-        result["appliance_id"] = request.args.get('applianceId')
-        result["time"] = request.args.get('time')
+        result["appliance_id"] = form.appliance.data
+        appliance_name = Appliance.query.get_or_404(result["appliance_id"])
+        result["appliance_name"] = appliance_name.name
         result["city"] = session["location"][0]["city"]
         result["state"] = session["location"][0]["state"]
-        print("results", result)
+        
+        #save to session
+        search = session['search_key']
+        search.append(result)
+        session['search_key'] = search
+        print(session)
         return render_template("results.html", result=result)
     
     return render_template('index.html', form=form)
@@ -82,50 +92,6 @@ def send_watts(id):
     return redirect('/')
     
 
-@app.route("/calculate")
-def calculate():
-    """Calculate electricity costs with user input
-    Returns JSON:{'watts': 2023.0, 'rate': 0.12, 'hours': 4.0, 'days': 25.0, 'freq': '300', 'ba': 'ERCOT_NORTH', 'percent': '55', 'point_time': '2020-05-16T22:55:00Z', 'city': 'Denton', 'state': 'Texas'} """
-    if session['csrf_token']:
-        if session.get('search_key') == None:
-            session['search_key'] = []
-
-        calc_dict = {}
-        #calculate electricity usage
-        for arg in request.args:
-            if request.args.get(arg):
-                calc_dict[arg] = request.args.get(arg)
-        
-        result = utils.calculate_consumption(calc_dict)
-       
-
-        # calculate cleanliness values
-        #todo change to session['lat'] session['lng']
-        print(session['location'])
-        lat = session['location'][0]['lat']
-        lng = session['location'][0]['lng']
-        json_emissions = login_watttime(lat, lng)
-
-        #add the results to the result dictionary
-        for key, value in json_emissions.items():
-            result[key] = value
-        
-        result["appliance_id"] = request.args.get('applianceId')
-        result["time"] = request.args.get('time')
-        result["city"] = session["location"][0]["city"]
-        result["state"] = session["location"][0]["state"]
-        
-       
-        search = session['search_key']
-        search.append(result)
-        session['search_key'] = search
-        print('********************')
-        print(session['search_key'])
-        print('********************')
-        return jsonify(result)
-    return redirect('/')
-
-
 @app.route("/save", methods=["POST"])
 def save_search():
     """Save a user search"""
@@ -137,7 +103,7 @@ def save_search():
                 daily_kWh = search['daily_kWh'],
                 annual_Consump = search['annual_consump'],
                 annual_Cost = search['annual_cost'],
-                timestamp = search['time'],
+                timestamp = search['point_time'],
                 grid = search['ba'],
                 gridpercent = search['percent'],
                 state = search['state'],

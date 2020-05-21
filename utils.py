@@ -50,14 +50,14 @@ def get_utility_rates():
 
     return rate_choices
 
-def calculate_consumption(calc_dict):
+def calculate_consumption(watts, hours, days, rate):
     """Returns a dictionary of calculated energy costs
         { "daily_kWh": 5.7, "annual_consump": 5.7, "annual_cost": 0.69 }"""
 
     calculations = {}
     
-    calculations["daily_kWh"] = (float(calc_dict["watts"]) * float(calc_dict["hours"])) / 1000
-    calculations["annual_consump"] = calculations["daily_kWh"]/100 * float(calc_dict["days"])
-    calculations["annual_cost"] = calculations["annual_consump"] * float(calc_dict["rate"])
+    calculations["daily_kWh"] = (float(watts) * float(hours)) / 1000
+    calculations["annual_consump"] = calculations["daily_kWh"] * float(days)
+    calculations["annual_cost"] = calculations["annual_consump"] * float(rate)
 
     return calculations

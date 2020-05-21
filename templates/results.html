@@ -2,4 +2,40 @@
 
 {% block content %}
 
+
+        <div id="main-div">
+            <!-- Scorer 1 Starts -->
+            <div class="layout-align jumbotron">
+            <div id="score-meter-1" class="layout-align">
+                <div id="scorer-1-inner-div">
+                    <div id="scorer-1-inner-div-5">
+                    <div class="scorer-1-tick" style="
+                          transform-origin: right center;
+                          transform: rotate({{180 * result['percent']/100}}deg);">
+                    </div>
+                    </div>
+                </div>
+                <div id="scorer-1-inner-div-2"></div>
+                <div id="scorer-1-inner-div-3"></div>
+                <div id="scorer-1-inner-div-4"></div>
+            </div>
+            <h4 class="mt-3">The grid {{result["ba"]}} is currently {{result["percent"]}}% dirty</h4>
+            </div>
+            
+        </div>
+        <div id="general-results" class="jumbotron row justify-content-center">
+           
+            <div class="col-sm-6" id="calc-results">
+                <h2>{{result["appliance_name"]}}</h2>
+                <p>Daily energy consumption: {{"{:.2f}".format(result["daily_kWh"])}} kWh</p>
+                <p>Annual energy consumption: {{"{:.2f}".format(result["annual_consump"]) }} kWh</p>
+                <p>Annual Cost: <b>${{"{:.2f}".format(result["annual_cost"])}}</b></p>
+            </div>
+        </div>
+        <a href="/" class="btn btn-secondary">Search again</a>
+        {% if current_user.is_authenticated %}
+        <form method="POST" action="/save"> 
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>         
+        <button type="submit" id="search-btn" class="btn btn-info" formmethod="POST" formaction="/save">Save Search</button></form>
+        {% endif %}
 {% endblock %}

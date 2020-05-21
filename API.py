@@ -33,6 +33,9 @@ def retrieve_zipcode(lng, lat):
     return zip_dict
 
 def login_watttime(lat, lng):
+    """Call the Watt Time API to receive grid cleanliness data. 
+    Params: lat and lng
+    Returns: {'freq': '300', 'ba': 'ERCOT_NORTH', 'percent': 48, 'point_time': '2020-05-21T22:15:00Z'} """
     #Watt time API calls
     wt_base_url = "https://api2.watttime.org/v2"
     headers = {
@@ -49,9 +52,9 @@ def login_watttime(lat, lng):
     #get real time emissions for region
     watt_time_emission_url = f"{wt_base_url}/index"
     watt_emissions = requests.get(watt_time_emission_url, params={"latitude": lat, "longitude": lng}, headers=region_headers).json()
-    # watt_emissions['city'] = coords['city']
-    # watt_emissions['state'] = coords['state']
     
+    #turn percent into an integer
+    watt_emissions["percent"] = int(watt_emissions["percent"])
     return watt_emissions
 
 # def util_rates():

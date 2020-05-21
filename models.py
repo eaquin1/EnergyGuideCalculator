@@ -82,7 +82,7 @@ class UserSearch(db.Model):
     appliance_id = db.Column(db.Integer, db.ForeignKey('appliances.id', ondelete='CASCADE'), nullable=False)
     daily_kWh = db.Column(db.Float, nullable=False)
     annual_Consump = db.Column(db.Float, nullable=False)
-    annual_Cost = db.Column(db.Integer, nullable=False)
+    annual_Cost = db.Column(db.Float, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     grid = db.Column(db.Text, nullable=False)
     gridpercent = db.Column(db.Integer, nullable=False)

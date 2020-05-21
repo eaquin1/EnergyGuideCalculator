@@ -140,17 +140,7 @@ $("#zipcode").on("blur", async function(){
 // }
 
 
-//set ticker hand to the correct percentage
-function controlTicker(gridpercent) {
 
-    let rotation = 180 * (gridpercent/100)
-    
-    const tick = document.querySelector('.scorer-1-tick')
-    
-    tick.style.transformOrigin = "right center"
-    tick.style.transform = `rotate(${rotation}deg)`
-       
-}
 
 //Find postcode of user using geolocation
 function geoFindMe() {
