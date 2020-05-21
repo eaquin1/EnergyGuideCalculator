@@ -5,7 +5,7 @@
 <div class="row justify-content-center">
     <div class="col-sm-6 col-centered border border-info rounded px-5 py-3">
     <div class="title text-center">Appliance Energy Calculator</div>
-    <form id="submit-form">
+    <form id="submit-form" method="POST">
         {{ form.hidden_tag() }}
    
         {{ form.zipcode.label (for_="zipcode")}}

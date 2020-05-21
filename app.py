@@ -41,7 +41,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def render_home():
     """Home page with calculator"""
     form = AddApplianceForm()
@@ -52,6 +52,8 @@ def render_home():
     form.appliance.choices = appliances
     #form.rate.choices = utility_rates
     
+    if form.validate_on_submit():
+        return "<h2>Ah Oui!</h2>"
     return render_template('index.html', form=form)
 
 @app.route("/watts/<int:id>")

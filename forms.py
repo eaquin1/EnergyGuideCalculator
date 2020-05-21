@@ -6,7 +6,7 @@ from wtforms_components import SelectField, Email, IntegerField
 class AddApplianceForm(FlaskForm):
     """Form for appliance energy calculator"""
     
-    appliance = SelectField('My appliance', validators=[InputRequired()])
+    appliance = SelectField('My appliance', coerce=int)
     watts = IntegerField('Wattage', validators=[InputRequired()])
     rate = FloatField('Utility Rate, ¢/kWh', validators=[InputRequired()])
     hours = IntegerField('Hours used per day', validators=[NumberRange(min=1, max=24, message="Please enter 24 hours or less"), InputRequired()])
