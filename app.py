@@ -48,12 +48,12 @@ def render_home():
     form = EnergySearchForm()
     #get appliances and utility rates from the database
     appliances = utils.get_appliances()
-    #utility_rates = utils.get_utility_rates()
-    #populate select fields with database rates
+    
+    
     form.appliance.choices = appliances
     #form.rate.choices = utility_rates
-    if session.get('search_key') == None:
-        session['search_key'] = []
+    
+    session['search_key'] = []
 
     if form.validate_on_submit():
           
@@ -64,7 +64,7 @@ def render_home():
         
         for key, value in json_emissions.items():
             result[key] = value
-            
+        
         result["appliance_id"] = form.appliance.data
         appliance_name = Appliance.query.get_or_404(result["appliance_id"])
         result["date"] = datetime.datetime.now()
@@ -112,6 +112,12 @@ def look_up_zipcode():
     session['location'] = location
 
     return jsonify(location_info)
+
+@app.route("/about")
+def about_page():
+    """Render about page"""
+    utility_rates = utils.get_utility_rates()
+    return render_template("about.html")
     
 ## SEARCH APPLIANCE ROUTES ## 
 @app.route("/save", methods=["POST"])
@@ -250,7 +256,7 @@ def profile(id):
     else:
         return ('', 403)
 
-@app.route("/delete/<int:id>")
+@app.route("/delete/<int:id>", methods=["POST"])
 @login_required
 def delete_user(id):
     if id == current_user.id:
@@ -260,18 +266,24 @@ def delete_user(id):
         flash('User account deleted', 'warning')
         return redirect('/')
     else:
-        return ('', 403)
+        return render_template("401.html")
 
+@app.errorhandler(404)
+def page_not_found(e):
+    """Custom 404 page"""
+    return render_template("404.html"), 404
 
+@app.errorhandler(401)
+def page_not_found(e):
+    """Custom 401 page"""
+    return render_template("401.html"), 401
 
-#     [('New England', ((21.63, 21.63), (21.63, 21.63))),
-#  ('Connecticut', ((21.93, 21.93), (21.63, 21.63))),
-#  ('Maine', ((16.79, 16.79), (21.63, 21.63))),
-#  ('Massachusetts', ((22.91, 22.91), (21.63, 21.63))),
-#  ('New Hampshire', ((20.23, 20.23), (21.63, 21.63))),
-#  ('Rhode Island', ((24.24, 24.24), (21.63, 21.63))),
-#  ('Vermont', ((19.27, 19.27), (21.63, 21.63))),
-#  ('Middle Atlantic', ((15.41, 15.41), (21.63, 21.63))),
-#  ('New Jersey', ((15.43, 15.43), (21.63, 21.63))),
-#  ('New York', ((17.55, 17.55), (21.63, 21.63))),
-#  ('Pennsylvania', ((13.63, 13.63), (21.63, 21.63)))]
+@app.errorhandler(405)
+def page_not_found(e):
+    """Custom 405 page"""
+    return render_template("401.html"), 405
+
+@app.errorhandler(403)
+def page_not_found(e):
+    """Custom 403 page"""
+    return render_template("401.html"), 403

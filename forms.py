@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, PasswordField, BooleanField
+from wtforms import StringField, FloatField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import NumberRange, Length, InputRequired
-from wtforms_components import SelectField, Email, IntegerField
+from wtforms_components import SelectField, Email
 
 class EnergySearchForm(FlaskForm):
     """Form for appliance energy calculator"""
