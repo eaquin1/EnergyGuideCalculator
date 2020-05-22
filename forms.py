@@ -3,7 +3,7 @@ from wtforms import StringField, FloatField, PasswordField, BooleanField
 from wtforms.validators import NumberRange, Length, InputRequired
 from wtforms_components import SelectField, Email, IntegerField
 
-class AddApplianceForm(FlaskForm):
+class EnergySearchForm(FlaskForm):
     """Form for appliance energy calculator"""
     
     appliance = SelectField('My appliance', coerce=int)
@@ -27,4 +27,16 @@ class LoginUserForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=6), InputRequired()])
     remember = BooleanField('Remember Me')
 
+class NewApplianceForm(FlaskForm):
+    """Form to add new appliance"""
+
+    name = StringField('Appliance', validators=[InputRequired()])
+    watts = IntegerField('Watts', validators=[InputRequired()])
+    category = SelectField('Category')
+
+class EditUserForm(FlaskForm):
+    """Form to edit user"""
+
+    username = StringField('Username', validators=[InputRequired()])
+    email = StringField('Email', validators=[Email(), InputRequired()])
 

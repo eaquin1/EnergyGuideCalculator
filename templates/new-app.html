@@ -1,0 +1,28 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<h2>Add a New Appliance</h2>
+<form method="POST" id="appliance_form">
+    {{ form.hidden_tag() }}
+    
+    {{ form.name.label(for_="name") }}
+    {{ form.name(class_="form-control", id="name") }}
+    {% if form.name.errors %}
+    {% for error in form.name.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+    {% endif %}
+    
+    {{ form.watts.label(for_="watts") }}
+    {{ form.watts(class_="form-control", id="watts") }}
+    {% if form.watts.errors %}
+    {% for error in form.watts.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+    {% endif %}
+    
+    {{ form.category.label(for_="category") }}
+    {{ form.category(class_="form-control", id="category") }}
+    {% if form.category.errors %}
+    {% for error in form.category.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+    {% endif %}
+        
+    <button class="btn btn-primary btn-lg btn-block">Add the appliance!</button>
+    </form>
+{% endblock %}

@@ -35,34 +35,11 @@
        {% endif %}
        
        <button class="btn btn-lg btn-primary mt-4 form-control" id="submit-calc">Submit</button>
+       {% if current_user.is_anonymous %}
        <small>Log in/create an account to save your search</small>
+       {% endif %}
     </form>
     </div>
 </div>
-<!-- <form method="POST" action="/save"> 
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>         
-<button type="submit" id="search-btn" class="btn btn-info" formmethod="POST" formaction="/save">Save Searches</button></form>
-<button class="btn btn-primary" formaction="/clear">Clear Searches</button>
-<div id="general-results" class="row justify-content-center">
-    <div class="col-sm-6" id="grid-results"></div>
-    <div class="col-sm-6" id="calc-results"></div>
-        <div id="main-div">
-            
-            <div class="layout-align">
-            <div id="score-meter-1" class="layout-align">
-                <div id="scorer-1-inner-div">
-                    <div id="scorer-1-inner-div-5">
-                    <div class="scorer-1-tick">
-                    </div>
-                    </div>
-                </div>
-                <div id="scorer-1-inner-div-2"></div>
-                <div id="scorer-1-inner-div-3"></div>
-                <div id="scorer-1-inner-div-4"></div>
-            </div>
-            
-            </div>
-        </div>
-</div>  -->
 
 {% endblock %}

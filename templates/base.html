@@ -34,10 +34,16 @@
             {% endif %}
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="/saved/{{current_user.id}}">Searches</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/saved/{{current_user.id}}">Searches</a>
+                <a class="nav-link" href="/addappliance">Add Appliance</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/profile/{{current_user.id}}">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
             </li>
             {% endif %}
         </ul>

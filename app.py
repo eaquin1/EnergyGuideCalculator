@@ -3,12 +3,13 @@ from flask import Flask, render_template, request, jsonify, Response, redirect, 
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Appliance, User, UserSearch, Utility
 from os import environ
-from forms import AddApplianceForm, NewUserForm, LoginUserForm
+from forms import EnergySearchForm, NewUserForm, LoginUserForm, NewApplianceForm, EditUserForm
 from flask_wtf.csrf import CSRFProtect
-from API import login_watttime, retrieve_long_lat, retrieve_zipcode
+from API import login_watttime, retrieve_long_lat, retrieve_zipcode, get_photo
 import utils
 from sqlalchemy.exc import IntegrityError
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+import datetime
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -44,9 +45,9 @@ def load_user(user_id):
 @app.route("/", methods=["GET", "POST"])
 def render_home():
     """Home page with calculator"""
-    form = AddApplianceForm()
+    form = EnergySearchForm()
     #get appliances and utility rates from the database
-    appliances = utils.get_categories()
+    appliances = utils.get_appliances()
     #utility_rates = utils.get_utility_rates()
     #populate select fields with database rates
     form.appliance.choices = appliances
@@ -55,8 +56,7 @@ def render_home():
         session['search_key'] = []
 
     if form.validate_on_submit():
-        
-        
+          
         result = utils.calculate_consumption(form.watts.data, form.hours.data, form.days.data, form.rate.data)
         lat = session['location'][0]['lat']
         lng = session['location'][0]['lng']
@@ -67,10 +67,11 @@ def render_home():
             
         result["appliance_id"] = form.appliance.data
         appliance_name = Appliance.query.get_or_404(result["appliance_id"])
+        result["date"] = datetime.datetime.now()
         result["appliance_name"] = appliance_name.name
         result["city"] = session["location"][0]["city"]
         result["state"] = session["location"][0]["state"]
-        
+        result["image_url"] = get_photo(appliance_name.name)
         #save to session
         search = session['search_key']
         search.append(result)
@@ -90,37 +91,6 @@ def send_watts(id):
        
         return jsonify(result)
     return redirect('/')
-    
-
-@app.route("/save", methods=["POST"])
-def save_search():
-    """Save a user search"""
-    if current_user.is_authenticated:
-        for search in session['search_key']:
-            search_values = UserSearch(
-                user_id = current_user.id,
-                appliance_id = search['appliance_id'],
-                daily_kWh = search['daily_kWh'],
-                annual_Consump = search['annual_consump'],
-                annual_Cost = search['annual_cost'],
-                timestamp = search['point_time'],
-                grid = search['ba'],
-                gridpercent = search['percent'],
-                state = search['state'],
-                city = search['city']
-            )
-            db.session.add(search_values)
-            db.session.commit()
-        session.pop('search_key')
-    return redirect("/")
-
-@app.route("/delete-search/<int:id>", methods=["POST"])
-@login_required
-def delete_search(id):
-    search = UserSearch.query.get_or_404(id)
-    db.session.delete(search)
-    db.session.commit()
-    return redirect(f"/saved/{current_user.id}")
 
 @app.route("/zipcode")
 def look_up_zipcode():
@@ -142,16 +112,79 @@ def look_up_zipcode():
     session['location'] = location
 
     return jsonify(location_info)
-
-# @app.route("/rates/<location>")
-# def find_rate(location):
     
-#     result = {"rate": state.rate}
-#     return jsonify(result)
+## SEARCH APPLIANCE ROUTES ## 
+@app.route("/save", methods=["POST"])
+@login_required
+def save_search():
+    """Save a user search"""
+    if current_user.is_authenticated:
+        for search in session['search_key']:
+            search_values = UserSearch(
+                user_id = current_user.id,
+                appliance_id = search['appliance_id'],
+                daily_kWh = search['daily_kWh'],
+                annual_Consump = search['annual_consump'],
+                annual_Cost = search['annual_cost'],
+                timestamp = search['date'],
+                grid = search['ba'],
+                gridpercent = search['percent'],
+                state = search['state'],
+                city = search['city']
+            )
+            db.session.add(search_values)
+            db.session.commit()
+        session.pop('search_key')
+    return redirect(f"/saved/{current_user.id}")
+
+@app.route("/delete-search/<int:id>", methods=["POST"])
+@login_required
+def delete_search(id):
+    search = UserSearch.query.get_or_404(id)
+    db.session.delete(search)
+    db.session.commit()
+    return redirect(f"/saved/{current_user.id}")
+
+@app.route("/saved/<int:id>")
+@login_required
+def show_list(id):
+    print(current_user.is_authenticated)
+    if current_user.is_authenticated:
+        searches = UserSearch.query.filter_by(user_id=id).all()
+
+        if len(searches) == 0:
+            return render_template('no_searches.html')
+        else:
+            return render_template('searches.html', searches=searches)
+
+    return redirect('/')
+
+@app.route("/addappliance", methods=["GET", "POST"])
+@login_required
+def add_appliance():
+    form = NewApplianceForm()
+    form.category.choices = utils.get_categories()
+    if current_user.is_authenticated:
+        if form.validate_on_submit():
+            try:
+                appliance = Appliance(
+                    name = form.name.data,
+                    watts = form.watts.data,
+                    category = form.category.data
+                )
+                db.session.add(appliance)
+                db.session.commit()
+                flash("New appliance added", "success")
+            except IntegrityError:
+                flash(f"{form.name.data} is already in the database", "danger")
+                return redirect("/addappliance")
+            return redirect("/")
+    return render_template("new-app.html", form=form)
 
 ## USER ROUTES ##
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     flash('Successfully logged out', 'info')
@@ -200,14 +233,36 @@ def login():
 
     return render_template('login.html', form=form)
 
-@app.route("/saved/<int:id>")
+@app.route("/profile/<int:id>", methods=["GET", "POST"])
 @login_required
-def show_list(id):
-    if current_user.is_authenticated:
-        searches = UserSearch.query.filter_by(user_id=id)
-        return render_template('searches.html', searches=searches)
+def profile(id):
+    """Show user account"""
+    if id == current_user.id:
+        form = EditUserForm(obj=current_user)
+        if form.validate_on_submit():
+            user = User.query.get(id)
+            user.username = form.username.data
+            user.email = form.email.data
+            db.session.commit()
+            flash('Changes successfully made to account', 'info')
+            return redirect(f'/profile/{id}')
+        return render_template('edit.html', user=current_user, form=form)
+    else:
+        return ('', 403)
 
-    return redirect('/')
+@app.route("/delete/<int:id>")
+@login_required
+def delete_user(id):
+    if id == current_user.id:
+        user = User.query.filter_by(id = id).first()
+        db.session.delete(user)
+        db.session.commit()
+        flash('User account deleted', 'warning')
+        return redirect('/')
+    else:
+        return ('', 403)
+
+
 
 #     [('New England', ((21.63, 21.63), (21.63, 21.63))),
 #  ('Connecticut', ((21.93, 21.93), (21.63, 21.63))),

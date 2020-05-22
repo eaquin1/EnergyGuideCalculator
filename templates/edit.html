@@ -1,0 +1,24 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<h2>Edit Profile</h2>
+
+<form method="POST" id="edit_user_form">
+    {{ form.hidden_tag() }}
+    
+    {{ form.username.label(for_="username") }}
+    {{ form.username(class_="form-control", id="username") }}
+    {% if form.username.errors %}
+    {% for error in form.username.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+    {% endif %}
+    
+    {{ form.email.label(for_="email") }}
+    {{ form.email(class_="form-control", id="email") }}
+    {% if form.email.errors %}
+    {% for error in form.email.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+    {% endif %}
+    
+    <button class="btn btn-primary btn-lg btn-block">Edit</button>
+    </form>
+    <a href="/delete/{{current_user.id}}" class="btn btn-warning">Delete</a>
+{% endblock %}

@@ -17,11 +17,11 @@ class Appliance(db.Model):
     __tablename__ = "appliances"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text, nullable=False, unique=True)
     watts = db.Column(db.Integer)
     category = db.Column(db.Text)
 
-    appliance_searches = db.relationship('UserSearch', backref='appliances')
+    appliance_searches = db.relationship('UserSearch', backref='appliances', cascade="all, delete-orphan")
 
     def __repr__(self):
         """Show info about appliance"""
@@ -37,7 +37,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     
-    searches = db.relationship('UserSearch', backref='users')
+    searches = db.relationship('UserSearch', backref='users', cascade="all, delete-orphan")
     
     def __repr__(self):
         u = self

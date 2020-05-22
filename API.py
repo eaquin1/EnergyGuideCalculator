@@ -1,4 +1,4 @@
-from config.app_config import GEONAMES_USER, B64VAL
+from config.app_config import GEONAMES_USER, B64VAL, PIXABAY_KEY
 import requests
 def retrieve_long_lat(zip):
     location_dict = {}
@@ -57,7 +57,14 @@ def login_watttime(lat, lng):
     watt_emissions["percent"] = int(watt_emissions["percent"])
     return watt_emissions
 
-# def util_rates():
-#     """Use OpenEI API to populate utility rate based on area"""
-
-#     openEI_base_url = "https://api.openei.org/utility_rates?version=3&format=json&"api_key=UTIL_API
+def get_photo(appliance):
+    """Call the Pixabay API to return an image URL of the appliance"""
+    pixa_base_url = "https://pixabay.com/api/"
+    try:
+        pixabay = requests.get(pixa_base_url, params={"key": PIXABAY_KEY, "q": appliance, "safesearch": True})
+        pixabay_resp = pixabay.json()
+        image_url = pixabay_resp["hits"][0]["webformatURL"]
+        print(image_url)
+    except:
+        image_url = "https://images.unsplash.com/photo-1519626504899-7a03a8a9ab51"
+    return image_url

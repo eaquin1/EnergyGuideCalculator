@@ -2,7 +2,7 @@ from app import db
 from models import db, connect_db, Appliance, Utility
 from collections import defaultdict
 
-def get_categories():
+def get_appliances():
     """Returns a list of tuples, of the appliances sorted by category
     [('Kitchen', (
         (1, 'Coffee Maker'),
@@ -31,6 +31,12 @@ def get_categories():
     
     return category_choices
 
+def get_categories():
+    all_categories = [(val.category, val.category) for val in Appliance.query.distinct(Appliance.category)]
+    return all_categories
+
+
+
 def get_utility_rates():
     """Returns a list of tuples, of the utility rates sorted by location
     [('US Average Rate', (
@@ -58,6 +64,6 @@ def calculate_consumption(watts, hours, days, rate):
     
     calculations["daily_kWh"] = (float(watts) * float(hours)) / 1000
     calculations["annual_consump"] = calculations["daily_kWh"] * float(days)
-    calculations["annual_cost"] = calculations["annual_consump"] * float(rate)
+    calculations["annual_cost"] = calculations["annual_consump"] * (float(rate)/100)
 
     return calculations
