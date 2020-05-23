@@ -10,6 +10,7 @@ import utils
 from sqlalchemy.exc import IntegrityError
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 import datetime
+import locale
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -37,6 +38,9 @@ connect_db(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+#set locale for formatting
+locale.setlocale(locale.LC_ALL, 'en_US')
 
 @login_manager.user_loader
 def load_user(user_id):

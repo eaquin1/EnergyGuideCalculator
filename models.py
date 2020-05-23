@@ -82,7 +82,7 @@ class UserSearch(db.Model):
     appliance_id = db.Column(db.Integer, db.ForeignKey('appliances.id', ondelete='CASCADE'), nullable=False)
     daily_kWh = db.Column(db.Float, nullable=False)
     annual_Consump = db.Column(db.Float, nullable=False)
-    annual_Cost = db.Column(db.Float, nullable=False)
+    annual_Cost = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     grid = db.Column(db.Text, nullable=False)
     gridpercent = db.Column(db.Integer, nullable=False)
@@ -92,7 +92,7 @@ class UserSearch(db.Model):
     @property
     def friendly_date(self):
         """"Return user friendly date"""
-        return f'{self.timestamp.strftime("%b %d %Y %H:%M %p")}'
+        return f'{self.timestamp.strftime("%b %d %Y %I:%M %p")}'
 
 class Utility(db.Model):
     """Average utility rates by location"""

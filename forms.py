@@ -1,7 +1,24 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, PasswordField, BooleanField, IntegerField
-from wtforms.validators import NumberRange, Length, InputRequired
+from wtforms.validators import NumberRange, Length, InputRequired, ValidationError
 from wtforms_components import SelectField, Email
+
+
+# def validation(postal_code):
+#     import re
+#     zipcode = re.compile(r'/^([A-Z][0-9][A-Z])\s*([0-9][A-Z][0-9])$/')
+#     pcode = re.compile(r'/^([0-9]{5})(?:[-\s]*([0-9]{4}))?$/')
+#     short_pcode = re.compile(r'/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/')
+#     if zipcode.match(postal_code) or pcode.match(postal_code) or short_pcode.match(postal_code):
+#         return True
+#     else:
+#         return False
+
+# def post_code_validator(form, field):
+#     if not validation(field.data):
+#         raise ValidationError('Invalid postal code')
+
+
 
 class EnergySearchForm(FlaskForm):
     """Form for appliance energy calculator"""

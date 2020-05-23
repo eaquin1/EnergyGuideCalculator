@@ -1,44 +1,44 @@
-{% extends 'base.html'%}
 
+{% extends 'base.html'%} 
 {% block content %}
-<div class="container-fluid" id="hero"></div>
+
 <div class="container">
+  {% if searches == None %}
+  <h2>Please save some searches!</h2>
+  {%endif%}
+  <h1 class="text-center mt-5">Searches for {{current_user.username}}</h1>
+  <div class="row">
+    <a class="btn btn-primary mx-auto" href="/">Search again</a>
+  </div>
+  <div class="row justify-content-center">
+    {%for search in searches%}
 
-{% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-       
-{% endfor %}
-{% if searches == None %}
-<h2>Please save some searches!</h2>
-{%endif%}
-<h1 class="text-center">Searches for {{current_user.username}}</h1>
-{%for search in searches%}
-
-<div class="row justify-content-center">
-
-
-<div class="card m-1 col-sm-6">
-    <div class="card-body">
-      <h5 class="card-title">{{search.friendly_date}}</h5>
-      <h6 class="card-subtitle mb-2 text-muted">{{search.appliances.name}}</h6>
-      <p class="card-text">Daily kWh: {{"{:.2f}".format(search.daily_kWh)}} kWh</p>
-      <p class="card-text">Annual Consumption: {{"{:.2f}".format(search.annual_Consump)}} kWh</p>
-      <p class="card-text">Annual Cost: ${{search.annual_Cost}}</p>
-      <p class="card-text">Grid and Percentage: {{search.grid}}, {{search.gridpercent}}%</p>
-      <p class="card-text">Location: {{search.city}}, {{search.state}}</p>
-      <form action="/delete-search/{{search.id}}"  method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>    
-        <button class="btn btn-sm btn-warning">Delete</button>
-     </form>
-      
+    <div class="card m-3 border border-info rounded shadow-lg" style="width: 19rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{search.friendly_date}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{search.appliances.name}}
+        </h6>
+        <p class="card-text">
+          Daily kWh: {{"{:.2f}".format(search.daily_kWh)}} kWh
+        </p>
+        <p class="card-text">
+          Annual Consumption: {{"{:.2f}".format(search.annual_Consump)}} kWh
+        </p>
+        <p class="card-text">Annual Cost: {{search.annual_Cost}}</p>
+        <p class="card-text">
+          Grid and Percentage: {{search.grid}}, {{search.gridpercent}}%
+        </p>
+        <p class="card-text">Location: {{search.city}}, {{search.state}}</p>
+        <form action="/delete-search/{{search.id}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="btn btn-sm btn-warning">Delete</button>
+        </form>
+      </div>
     </div>
+
+    {% endfor %}
   </div>
 </div>
-{% endfor %}
-<a class="btn btn-primary" href="/">Search again</a>
-</div>
 {% endblock %}
+

@@ -1,17 +1,9 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<div class="container-fluid" id="hero"></div>
+
 <div class="container">
 <h2 class="mt-5">Discover how clean your grid is, right now</h2>
-{% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-       
-{% endfor %}
 
 
 <div class="row justify-content-center">
@@ -59,7 +51,7 @@
        {% endif %}
        </div>
        
-       <button class="btn btn-lg btn-primary mt-4 form-control" id="submit-calc">Submit</button>
+       <button class="btn btn-lg btn-primary mt-4" id="submit-calc">Submit</button>
        {% if current_user.is_anonymous %}
        <small>Log in/create an account to save your search</small>
        {% endif %}

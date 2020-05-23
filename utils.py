@@ -1,6 +1,10 @@
 from app import db
 from models import db, connect_db, Appliance, Utility
 from collections import defaultdict
+import locale
+
+#set locale for formatting
+locale.setlocale(locale.LC_ALL, 'en_US')
 
 def get_appliances():
     """Returns a list of tuples, of the appliances sorted by category
@@ -64,6 +68,6 @@ def calculate_consumption(watts, hours, days, rate):
     
     calculations["daily_kWh"] = (float(watts) * float(hours)) / 1000
     calculations["annual_consump"] = calculations["daily_kWh"] * float(days)
-    calculations["annual_cost"] = calculations["annual_consump"] * (float(rate)/100)
+    calculations["annual_cost"] = locale.currency(calculations["annual_consump"] * (float(rate)/100))
 
     return calculations

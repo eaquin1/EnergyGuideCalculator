@@ -1,17 +1,8 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<div class="container-fluid" id="hero"></div>
-<div class="container">
 
-{% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-       
-{% endfor %}
+<div class="container">
 
 <h2 class="my-5">“How clean is my electricity if I use it right now?”</h2>
 

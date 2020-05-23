@@ -1,53 +1,74 @@
+
 {% extends 'base.html'%}
-
 {% block content %}
-<div class="container-fluid" id="hero"></div>
+
 <div class="container">
-
-{% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        </div>
-       
-{% endfor %}
-
-        <div id="main-div">
-            <!-- Scorer 1 Starts -->
-            <div class="layout-align jumbotron">
-            <div id="score-meter-1" class="layout-align">
-                <div id="scorer-1-inner-div">
-                    <div id="scorer-1-inner-div-5">
-                    <div class="scorer-1-tick" style="
+  <h1 class="text-center mt-5">EnergyGuide Results</h1>
+  <div class="row">
+    <a href="/" class="btn btn-warning btn-lg mx-auto">Search again</a>
+  </div>
+  <div class="row justify-content-center">
+    <div
+      class="card border border-info rounded shadow-lg bg-white m-3"
+      id="main-div"
+      style="width: 22rem;"
+    >
+      <!-- Scorer 1 Starts -->
+      <div class="layout-align card-body">
+        <div id="score-meter-1" class="layout-align card-img-top">
+          <div id="scorer-1-inner-div">
+            <div id="scorer-1-inner-div-5">
+              <div
+                class="scorer-1-tick"
+                style="
                           transform-origin: right center;
-                          transform: rotate({{180 * result['percent']/100}}deg);">
-                    </div>
-                    </div>
-                </div>
-                <div id="scorer-1-inner-div-2"></div>
-                <div id="scorer-1-inner-div-3"></div>
-                <div id="scorer-1-inner-div-4"></div>
+                          transform: rotate({{180 * result['percent']/100}}deg);"
+              ></div>
             </div>
-            <h4 class="mt-3">The grid {{result["ba"]}}, in {{result["city"]}}, {{result["state"]}} is currently at {{result["percent"]}}% emissions</h4>
-            </div>
-            
+          </div>
+          <div id="scorer-1-inner-div-2"></div>
+          <div id="scorer-1-inner-div-3"></div>
+          <div id="scorer-1-inner-div-4"></div>
         </div>
-        <div id="general-results" class="jumbotron row justify-content-center">
-           
-            <div class="col-sm-6" id="calc-results">
-                <h2>{{result["appliance_name"]}}</h2>
-                <img class="img-thumbnail" src="{{result["image_url"]}}" alt="appliance">
-                <p>Daily energy consumption: {{"{:.2f}".format(result["daily_kWh"])}} kWh</p>
-                <p>Annual energy consumption: {{"{:.2f}".format(result["annual_consump"]) }} kWh</p>
-                <p>Annual Cost: <b>${{"{:.2f}".format(result["annual_cost"])}}</b></p>
-            </div>
-        </div>
-        <a href="/" class="btn btn-secondary">Search again</a>
+        <p class="mt-3 card-text">
+          The grid {{result["ba"]}}, in {{result["city"]}}, {{result["state"]}}
+          is currently at {{result["percent"]}}% emissions
+        </p>
+      </div>
+    </div>
+    <div
+      id="general-results"
+      class="card border border-info rounded shadow-lg bg-white m-3"
+      style="width: 22rem;"
+    >
+      <img class="card-img-top" src="{{result['image_url']}}" alt="appliance" />
+      <h2 class="card-title p-2">{{result["appliance_name"]}}</h2>
+      <div class="card-body">
+        <p class="card-text">
+          Daily energy consumption: {{"{:.2f}".format(result["daily_kWh"])}} kWh
+        </p>
+        <p class="card-text">
+          Annual energy consumption: {{"{:.2f}".format(result["annual_consump"])
+          }} kWh
+        </p>
+        <p class="card-text">Annual Cost: <b>{{result["annual_cost"]}}</b></p>
+
         {% if current_user.is_authenticated %}
-        <form method="POST" action="/save"> 
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>         
-        <button type="submit" id="search-btn" class="btn btn-info" formmethod="POST" formaction="/save">Save Search</button></form>
+        <form method="POST" action="/save">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button
+            type="submit"
+            id="search-btn"
+            class="btn btn-info"
+            formmethod="POST"
+            formaction="/save"
+          >
+            Save Search
+          </button>
+        </form>
         {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,5 +1,9 @@
 body{
-  background-color: rgb(236, 232, 233);
+ background-color: rgb(236, 232, 233); 
+}
+
+#bolt {
+  height: 28px;
 }
 
 #hero{
