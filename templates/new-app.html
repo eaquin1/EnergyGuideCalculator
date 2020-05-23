@@ -1,28 +1,45 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<h2>Add a New Appliance</h2>
+<div class="container-fluid" id="hero"></div>
+<div class="container">
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+       
+{% endfor %}
+<h2 class="mt-5">Add a New Appliance</h2>
+
+<div class="col-centered border border-info rounded px-5 py-3 my-5 shadow-lg bg-white">
 <form method="POST" id="appliance_form">
     {{ form.hidden_tag() }}
-    
+    <div class="form-group">
     {{ form.name.label(for_="name") }}
     {{ form.name(class_="form-control", id="name") }}
     {% if form.name.errors %}
     {% for error in form.name.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
     {% endif %}
-    
+</div>
+    <div class="form-group">
     {{ form.watts.label(for_="watts") }}
     {{ form.watts(class_="form-control", id="watts") }}
     {% if form.watts.errors %}
     {% for error in form.watts.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
     {% endif %}
-    
+</div>
+    <div class="form-group">
     {{ form.category.label(for_="category") }}
     {{ form.category(class_="form-control", id="category") }}
     {% if form.category.errors %}
     {% for error in form.category.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
     {% endif %}
-        
-    <button class="btn btn-primary btn-lg btn-block">Add the appliance!</button>
+</div>
+    <button class="my-5 btn btn-primary btn-lg btn-block">Add the appliance!</button>
     </form>
+    </div>
+</div>
 {% endblock %}

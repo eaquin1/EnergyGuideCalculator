@@ -1,5 +1,61 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<img src="static/energy-guide-label.jpg" alt="energy guide label">
+<div class="container-fluid" id="hero"></div>
+<div class="container">
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+       
+{% endfor %}
+
+<h2 class="my-5">“How clean is my electricity if I use it right now?”</h2>
+
+<p class="mt-4">EnergyGuide is intended to give you more information to tailor your energy usage to your budget and to the needs of your local electricity grid. While there are more sources of clean energy than ever before, the energy isn't always produced when the grid load is highest. For example, wind turbines might harvest large amounts of energy in the middle of the night, but the grid needs the energy during the day, when air conditioners are used to combat the afternoon heat. The technology for storing wind and solar energy is lagging behind the electricity needs of the grid. 
+</p>
+<p>
+    This is where <a href="https://www.watttime.org/">Watt Time</a> comes in. They created Automated Emissions Reduction (AER) technology to enable smart devices to run when the grid when is cleanest. However, not everyone is using smart devices (yet). Watt Time collects data every 5 minutes to compare the cleanliness of each grid in the United States and Canada, and reports how dirty the grid is running, in a percentage.
+</p>  
+<p>
+    EnergyGuide will report the current grid data for your location, and it also combines information on the energy usage for various appliances. The inspiration is the yellow sticker you'll find on various appliances when you buy them. You can input your appliance, and edit the wattage of your particular appliance, while also entering your price of electricity. EnergyGuide will tell you how much electricity your item uses on daily basis, yearly basis, and how much that costs you. If you create an account, you can save your searches and track the cleanliness of your grid during various points during the day. 
+</p>
+<p>
+    The calculations for your appliances electricity costs are as follows:
+    <ul>
+    <li>Daily energy: (Wattage × Hours Used Per Day) ÷ 1000 = Daily Kilowatt-hour (kWh) consumption</li>
+
+    <li>Annual Energy: Daily kWh consumption × number of days used per year = annual energy consumption</li>
+
+    <li>Annual Cost: Annual energy consumption × utility rate per kWh = annual cost to run appliance </li>
+</ul>
+</p>
+
+<figure class="my-5">
+    <img src="static/energy-guide-label.jpg" alt="energy guide label">
+    <figcaption class="figure-caption">consumer.ftc.gov</figcaption>
+</figure>
+<h3>Sources</h3> 
+<p>
+    The appliance and utility data was web scraped from the 2010 Buildings Energy Databook, Table 2.1.16; the EIA Electric Power Monthly, Table 5.06;, and <a href="https://www.energyhub.org/electricity-prices/">EnergyHub</a>. <a href="https://icons8.com/icon/52550/lightning-bolt">Lightning Bolt icon by Icons8</a>
+ </p>
+<table class="table col-6">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Location</th>
+        <th scope="col">Average Utility Rate, ¢/kWh</th>
+    </tr>
+    </thead>
+    {% for rate in rates %}
+    <tr>
+        <td>{{rate.location}}</td>
+        <td>{{rate.rate}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
 {% endblock %}

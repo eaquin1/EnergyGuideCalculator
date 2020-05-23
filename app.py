@@ -116,8 +116,8 @@ def look_up_zipcode():
 @app.route("/about")
 def about_page():
     """Render about page"""
-    utility_rates = utils.get_utility_rates()
-    return render_template("about.html")
+    utility_rates = Utility.query.all()
+    return render_template("about.html", rates=utility_rates)
     
 ## SEARCH APPLIANCE ROUTES ## 
 @app.route("/save", methods=["POST"])
@@ -125,7 +125,8 @@ def about_page():
 def save_search():
     """Save a user search"""
     if current_user.is_authenticated:
-        for search in session['search_key']:
+        results = session.get('search_key')
+        for search in results:
             search_values = UserSearch(
                 user_id = current_user.id,
                 appliance_id = search['appliance_id'],

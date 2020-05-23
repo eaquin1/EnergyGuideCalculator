@@ -1,22 +1,40 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<div class="container-fluid" id="hero"></div>
+<div class="container">
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+       
+{% endfor %}
+<h2 class="mt-5">Log In</h2>
+<div class="col-centered border border-info rounded px-5 py-3 my-5 shadow-lg bg-white">
 <form method="POST" id="user_form">
 {{ form.hidden_tag() }}
+<div class="form-group">
 {{ form.username.label(for_="username") }}
 {{ form.username(class_="form-control", id="username") }}
-
-
+</div>
+<div class="form-group">
 {{ form.password.label(for_="password") }}
 {{ form.password(class_="form-control", id="password") }}
 {% if form.password.errors %}
 {% for error in form.password.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
 {% endif %}
+</div>
 
-{{ form.remember.label(for_="remember") }}
-{{ form.remember(class_="form-control", id="remember") }}
+<div class="form-check form-check-inline">
+{{ form.remember.label(for_="remember", class_="form-check-label mr-2") }}
+{{ form.remember(id="remember", class_="form-check-input", type_="checkbox" ) }}
+</div>
 
-
-<button class="btn btn-primary btn-lg btn-block">Log in!</button>
-
+<button class="btn btn-primary btn-lg btn-block my-3">Log in!</button>
+</form>
+</div>
+</div>
 {% endblock %}

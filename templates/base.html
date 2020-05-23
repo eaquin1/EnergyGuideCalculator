@@ -6,7 +6,7 @@
     <title>Energy Guide Calculator</title>
     <link rel="icon" 
     type="image/png" 
-    href="https://img.icons8.com/cotton/64/000000/owl--v1.png" />
+    href="https://img.icons8.com/nolan/64/lightning-bolt.png" />
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/minty/bootstrap.min.css" rel="stylesheet" integrity="sha384-4HfFay3AYJnEmbgRzxYWJk/Ka5jIimhB/Fssk7NGT9Tj3rkEChpSxLK0btOGzf2I" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
@@ -15,7 +15,9 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="/">EnergyGuide</a>
+        <a class="navbar-brand" href="/">EnergyGuide <svg class="bi bi-lightning-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M11.251.068a.5.5 0 01.227.58L9.677 6.5H13a.5.5 0 01.364.843l-8 8.5a.5.5 0 01-.842-.49L6.323 9.5H3a.5.5 0 01-.364-.843l8-8.5a.5.5 0 01.615-.09z" clip-rule="evenodd"/>
+          </svg></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -50,18 +52,15 @@
     </div>
     </nav>
     
-    <div class="container mt-5">
-        {% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-
+   
+        
         {% block content %}
         {% endblock %}
-    </div>
+    
 
-    <nav class="navbar fixed-bottom navbar-light bg-light">
+    <!-- <nav class="navbar fixed-bottom navbar-light bg-light">
         <p>Wattage and utility rate data sources: 2010 Buildings Energy Databook, Table 2.1.16; EIA Electric Power Monthly, Table 5.06;</p>
-    </nav>
+    </nav> -->
     
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/static/energy.js"></script>
