@@ -7,11 +7,6 @@ from flask_login import UserMixin
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
-def connect_db(app):
-    db.app = app
-    db.init_app(app)
-
-
 class Appliance(db.Model):
     """Appliances Wattage Model"""
     __tablename__ = "appliances"
@@ -103,6 +98,8 @@ class Utility(db.Model):
     rate = db.Column(db.Float, nullable=False)
 
 
-
+def connect_db(app):
+    db.app = app
+    db.init_app(app)
 
         

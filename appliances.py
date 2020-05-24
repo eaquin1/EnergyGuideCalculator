@@ -99,6 +99,12 @@ for val in range(0, len(canada_list_cleaned), 2):
                     rate = canada_list_cleaned[val + 1])
     utility_rates.append(rate)                                                                                                                                                                                                                                                 
 
+#add cell phone and tablet appliances
+cell_phone = Appliance(name="Cell Phone Charger", watts=5, category="Home Electronics")
+tablet = Appliance(name="Tablet Charger", watts=12, category="Home Electronics")
+
+cleaned_appliances.append(cell_phone)
+cleaned_appliances.append(tablet)
 
 db.session.add_all([*utility_rates])
 db.session.add_all([*cleaned_appliances])
