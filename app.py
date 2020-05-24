@@ -159,7 +159,7 @@ def delete_search(id):
 @app.route("/saved/<int:id>")
 @login_required
 def show_list(id):
-    print(current_user.is_authenticated)
+    
     if current_user.is_authenticated:
         searches = UserSearch.query.filter_by(user_id=id).all()
 

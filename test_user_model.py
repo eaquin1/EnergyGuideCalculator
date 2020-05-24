@@ -4,7 +4,7 @@ import os
 from unittest import TestCase
 from sqlalchemy import exc
 
-from models import db, User, Appliance, UserSearch, Utility
+from models import db, User
 
 os.environ['DATABASE_URL'] = "postgresql:///energy-test"
 
@@ -16,21 +16,29 @@ class UserModelTests(TestCase):
 
     def setUp(self):
         #clear database
-        
+        db.session.close()
         db.drop_all()
         db.create_all()
 
         #create user
         user_1 = User.signup('Tester1', 'test1@gmail.com', 'expassword111')
         user_1.id = 112
-
+        db.session.add(user_1)
         db.session.commit()
+
+        self.client = app.test_client()
+
     
     def tearDown(self):
         resp = super().tearDown()
         db.session.rollback()
         return resp
-    
+    #####
+    #
+    # Signup Tests
+    #
+    #####
+
     def test_user_model(self):
 
         u = User(
@@ -50,6 +58,7 @@ class UserModelTests(TestCase):
         self.assertEqual(u.email,'User@user.com')
         self.assertEqual(u.password,'HASHED_PASSWORD')
 
+
     def test_valid_registration(self):
 
         u = User.signup(
@@ -60,7 +69,38 @@ class UserModelTests(TestCase):
 
         db.session.add(u)
         db.session.commit()
-        #self.assertNotEqual(u.password, 'HASHED_PASSWORD2')
+        self.assertNotEqual(u.password, 'HASHED_PASSWORD2')
         self.assertIsNotNone(u.id)
         self.assertTrue(u.password.startswith('$2b$'))
+
+    def test_invalid_username_signup(self):
+        invalid = User.signup(None, "test@test.com", "pass")
+        invalid.id = 1234
+
+        with self.assertRaises(exc.IntegrityError):
+            db.session.commit()
+    
+    def test_invalid_password_signup(self):
+        with self.assertRaises(ValueError):
+            User.signup("testertester", "email@email.com", "")
+
+        with self.assertRaises(ValueError):
+            User.signup("test344", "e344@email.com", None)
+
+     #####
+    #
+    # Authentication Tests
+    #
+    #####
+
+    def test_valid_authenication(self):
+        user = User.authenticate(self.user_1.username, "expassword111")
+        self.assertIsNotNone(user)
+        self.assertEqual(user.id, self.user_1.id)
+
+    def test_invalid_password_authentication(self):
+        self.assertFalse(User.authenticate(self.user_1.username, "What do I put here?"))
+
+    def test_invalid_username_authentication(self):
+        self.assertFalse(User.authenticate("someone", "password"))
         
