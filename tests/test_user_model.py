@@ -20,12 +20,6 @@ class UserModelTests(TestCase):
         db.drop_all()
         db.create_all()
 
-        #create user
-        user_1 = User.signup('Tester1', 'test1@gmail.com', 'expassword111')
-        user_1.id = 112
-        db.session.add(user_1)
-        db.session.commit()
-
         self.client = app.test_client()
 
     
@@ -94,12 +88,14 @@ class UserModelTests(TestCase):
     #####
 
     def test_valid_authenication(self):
-        user = User.authenticate(self.user_1.username, "expassword111")
+        user_1 = User.signup('Mememe', 'email@here.com', 'passiepassie')
+        user = User.authenticate(user_1.username, "passiepassie")
         self.assertIsNotNone(user)
-        self.assertEqual(user.id, self.user_1.id)
+        self.assertEqual(user.id, user_1.id)
 
     def test_invalid_password_authentication(self):
-        self.assertFalse(User.authenticate(self.user_1.username, "What do I put here?"))
+        user_1 = User.signup('Tester1', 'test1@gmail.com', 'expassword111')
+        self.assertFalse(User.authenticate(user_1.username, "What do I put here?"))
 
     def test_invalid_username_authentication(self):
         self.assertFalse(User.authenticate("someone", "password"))

@@ -1,63 +1,91 @@
-{% extends 'base.html'%}
-
-{% block content %}
+{% extends 'base.html'%} {% block content %}
 
 <div class="container">
-<h2 class="mt-5">Discover how clean your grid is, right now</h2>
+  <h2 class="mt-5">Discover how clean your grid is, right now</h2>
 
-
-<div class="row justify-content-center">
-<div class="col-md-4 mt-5">
-<p>Entering your location and the appliance you'd like to use will give the average utility rate for your area, and the average number of watts for your appliance.</p>
-<p>Feel free to edit the averages to your needs!</p>
-<p>Press Submit and you will see the cleanliness of your electric grid, and how much your appliance is costing you</p>
-</div>
-<div class="col-md-8 mb-5">
-
-    <div class="col-centered border border-info rounded px-5 py-3 my-5 shadow-lg bg-white">
-    <div class="title text-center"><b>Appliance Energy Calculator</b></div>
-    <form id="submit-form" method="POST">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-        {{ form.zipcode.label (for_="zipcode", class_="mt-3")}}
-       <button class="btn btn-sm btn-info ml-2" id="gps">Use GPS</button>
-       {{ form.zipcode(class_="form-control", id="zipcode") }}
-       <small id="help-location"></small>
-        </div>
-        <div class="form-group">
-       {{ form.appliance.label(for_="appliance-select")}}
-       {{ form.appliance(class_="form-control selectpicker", id="appliance-select", data_live_search="true") }}
+  <div class="row justify-content-center">
+    <div class="col-md-4 mt-5">
+      <p>
+        Entering your location and the appliance you'd like to use will give the
+        average utility rate for your area, and the average number of watts for
+        your appliance.
+      </p>
+      <p>Feel free to edit the averages to your needs!</p>
+      <p>
+        Press Submit and you will see the cleanliness of your electric grid,
+        from the Watt Time API, and how much your appliance is costing you. The
+        Watt Time API updates the grid cleanliness every five minutes.
+      </p>
     </div>
-       <div class="form-group">
-       {{ form.watts.label(for_="watts")}}
-       {{ form.watts(class_="form-control integer-input", placeholder=1000, id_="watts", value=1000) }}
-       </div>
-       <div class="form-group">
-       {{ form.rate.label (for_="rate")}}
-       {{ form.rate(class_="form-control integer-input", id="rate") }}
-        </div>
-        <div class="form-group">
-       {{ form.hours.label (for_="hours")}}
-       {{ form.hours(class_="form-control integer-input", id="hours") }}
-       {% if form.hours.errors %}
-       {% for error in form.hours.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
-       {% endif %}
-        </div>
-        <div class="form-group">
-       {{ form.days.label (for_="days")}}
-       {{ form.days(class_="form-control integer-input", id="days") }}
-       {% if form.days.errors %}
-       {% for error in form.days.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
-       {% endif %}
-       </div>
-       
-       <button class="btn btn-lg btn-primary mt-4" id="submit-calc">Submit</button>
-       {% if current_user.is_anonymous %}
-       <small>Log in/create an account to save your search</small>
-       {% endif %}
-    
-    </form>
-    </div></div>
+    <div class="col-md-8 mb-5">
+      <div
+        class="col-centered border border-info rounded px-5 py-3 my-5 shadow-lg bg-white"
+      >
+        <div class="title text-center"><b>Appliance Energy Calculator</b></div>
+        <form id="submit-form" method="POST">
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            {{ form.zipcode.label (for_="zipcode", class_="mt-3")}}
+            <button class="btn btn-sm btn-info ml-2" id="gps">Use GPS</button>
+            {{ form.zipcode(class_="form-control", id="zipcode") }}
+            <small id="help-location"></small>
+          </div>
+          <div class="form-group">
+            {{ form.appliance.label(for_="appliance-select")}} {{
+            form.appliance(class_="form-control selectpicker",
+            id="appliance-select", data_live_search="true") }}
+          </div>
+          <div class="form-group">
+            {{ form.watts.label(for_="watts")}} {{
+            form.watts(class_="form-control integer-input", placeholder=1000,
+            id_="watts", value=1000) }}
+          </div>
+          <div class="form-group">
+            {{ form.rate.label (for_="rate")}} {{ form.rate(class_="form-control
+            integer-input", id="rate") }}
+          </div>
+          <div class="form-group">
+            {{ form.hours.label (for_="hours")}} {{
+            form.hours(class_="form-control integer-input", id="hours") }} {% if
+            form.hours.errors %} {% for error in form.hours.errors %}<small
+              class="form-text text-danger"
+              >{{ error }}</small
+            >{% endfor %} {% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.days.label (for_="days")}} {{ form.days(class_="form-control
+            integer-input", id="days") }} {% if form.days.errors %} {% for error
+            in form.days.errors %}<small class="form-text text-danger"
+              >{{ error }}</small
+            >{% endfor %} {% endif %}
+          </div>
+
+          <button class="btn btn-lg btn-primary mt-4" id="submit-calc">
+            Submit
+          </button>
+          {% if current_user.is_anonymous %}
+          <small>Log in/create an account to save your search</small>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+<div class="footer">
+  <div class="container text-center pb-5">
+    <a href="https://github.com/eaquin1" class="pr-3"
+      ><img
+        src="/static/icons/GitHub-Mark-64px.png"
+        alt="Github"
+        style="height: 25px;"
+    /></a>
+    <a href="https://www.linkedin.com/in/emilyaquin/"
+      ><img
+        src="/static/icons/LI-In-Bug.png"
+        alt="LinkedIN"
+        class="pl-3"
+        style="height: 25px;"
+    /></a>
+  </div>
 </div>
 {% endblock %}

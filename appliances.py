@@ -56,6 +56,8 @@ for (cat, ra) in appliance_dict.items():
 # remove appliance from list if there is no wattage 
 cleaned_appliances = [appl for appl in appliances if appl.watts != None]
 
+#remove extra water heater entry
+cleaned_appliances.pop(26)
 ## Supplement missing wattage information for washer, dryer, refrigerator, etc
 
 # pdfFileObj = open('static/1min_data.pdf', 'rb')
