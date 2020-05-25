@@ -3,32 +3,32 @@
 {% block content %}
 <div class="container">
 <h2 class="mt-5">Edit Profile</h2>
-<div class="col-md-8 border border-info rounded px-5 py-3 my-5 shadow-lg bg-white">
-    
-<form method="POST" id="edit_user_form">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-    {{ form.username.label(for_="username") }}
-    {{ form.username(class_="form-control", id="username") }}
-    {% if form.username.errors %}
-    {% for error in form.username.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
-    {% endif %}
-</div>
-    <div class="form-group">
-    {{ form.email.label(for_="email") }}
-    {{ form.email(class_="form-control", id="email") }}
-    {% if form.email.errors %}
-    {% for error in form.email.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
-    {% endif %}
-</div>
-<div class="row">
-    <button class="btn btn-primary btn-lg">Edit</button>
-    </form>
+    <div class="col-md-8 border border-info rounded px-5 py-3 my-5 shadow-lg bg-white"> 
+        <form method="POST" id="edit_user_form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+            {{ form.username.label(for_="username") }}
+            {{ form.username(class_="form-control", id="username") }}
+            {% if form.username.errors %}
+            {% for error in form.username.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+            {% endif %}
+        </div>
+            <div class="form-group">
+            {{ form.email.label(for_="email") }}
+            {{ form.email(class_="form-control", id="email") }}
+            {% if form.email.errors %}
+            {% for error in form.email.errors %}<small class="form-text text-danger">{{ error }}</small>{% endfor %}
+            {% endif %}
+        </div>
+        <div class="row">
+            <button class="btn btn-primary btn-lg">Edit</button>
+        </form>
 
-    <form action="/delete/{{current_user.id}}"  method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>    
-        <button class="btn btn-lg btn-warning mx-4">Delete</button>
-    </form></div>
+        <form action="/delete/{{current_user.id}}"  method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>    
+            <button class="btn btn-lg btn-warning mx-4">Delete</button>
+        </form>
+    </div>
 </div>
-</div>
+
 {% endblock %}

@@ -5,7 +5,7 @@ import requests
 def retrieve_long_lat(zip):
     location_dict = {}
 
-    if(len(zip) == 6 or len(zip) == 3):
+    if(len(zip) == 6 or len(zip) == 3 or len(zip)== 7):
         country = 'CA'
     elif(len(zip) == 5):
         country = 'US'

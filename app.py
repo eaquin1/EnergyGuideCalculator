@@ -55,10 +55,15 @@ def render_home():
     
     
     form.appliance.choices = appliances
-    #form.rate.choices = utility_rates
-    
-    session['search_key'] = []
+    #get the submitted location, and set it to New York City if it is not found
 
+    if session.get('location') == None:
+        session['location'] = []
+        nyc = {"lat": "40.730610", "lng":  "-73.935242", "city": "New York City", "state": "New York"}
+        session['location'].append(nyc)
+
+    session['search_key'] = []
+    
     if form.validate_on_submit():
           
         result = utils.calculate_consumption(form.watts.data, form.hours.data, form.days.data, form.rate.data)
@@ -102,10 +107,14 @@ def look_up_zipcode():
     if request.args.get('zipcode'):
         zipc = request.args.get('zipcode')
         location_info = retrieve_long_lat(zipc)
-    else:
+    elif request.args.get('lat') and request.args.get('lng'):
         lat = request.args.get('lat')
         lng = request.args.get('lng')
         location_info = retrieve_zipcode(lng, lat)
+    else:
+        #set default to New York City
+        lat = 40.730610
+        lng = -73.935242
     
     utility = Utility.query.filter(Utility.location == location_info["state"]).first()
     location_info['rate'] = utility.rate

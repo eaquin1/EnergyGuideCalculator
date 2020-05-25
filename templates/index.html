@@ -28,7 +28,10 @@
             {{ form.zipcode.label (for_="zipcode", class_="mt-3")}}
             <button class="btn btn-sm btn-info ml-2" id="gps">Use GPS</button>
             {{ form.zipcode(class_="form-control", id="zipcode") }}
-            <small id="help-location"></small>
+            <small id="help-location" class="text-danger"></small>
+            {% if form.zipcode.errors %} {% for error in form.zipcode.errors
+            %}<small class="form-text text-danger">{{ error }}</small>{% endfor
+            %} {% endif %}
           </div>
           <div class="form-group">
             {{ form.appliance.label(for_="appliance-select")}} {{
@@ -38,11 +41,17 @@
           <div class="form-group">
             {{ form.watts.label(for_="watts")}} {{
             form.watts(class_="form-control integer-input", placeholder=1000,
-            id_="watts", value=1000) }}
+            id_="watts", value=1000) }} {% if form.watts.errors %} {% for error
+            in form.watts.errors %}<small class="form-text text-danger"
+              >{{ error }}</small
+            >{% endfor %} {% endif %}
           </div>
           <div class="form-group">
             {{ form.rate.label (for_="rate")}} {{ form.rate(class_="form-control
-            integer-input", id="rate") }}
+            integer-input", id="rate") }} {% if form.rate.errors %} {% for error
+            in form.rate.errors %}<small class="form-text text-danger"
+              >{{ error }}</small
+            >{% endfor %} {% endif %}
           </div>
           <div class="form-group">
             {{ form.hours.label (for_="hours")}} {{
