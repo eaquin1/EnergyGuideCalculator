@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, jsonify, Response, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
+from config.app_config import DB_URI, SECRET_KEY
 from models import db, connect_db, Appliance, User, UserSearch, Utility
 from os import environ
 from forms import EnergySearchForm, NewUserForm, LoginUserForm, NewApplianceForm, EditUserForm
@@ -17,17 +18,20 @@ csrf = CSRFProtect(app)
 
 # use local development config vars if folder exists, otherwise use environment vars
 # '/config' folder should never be tracked in source control!
-import importlib
-dev_config = importlib.util.find_spec('config')
-if dev_config is not None:
-    from config.app_config import DB_URI, SECRET_KEY
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    app.config['SQLALCHEMY_ECHO'] = False
-else:
-    DB_URI = environ.get('DATABASE_URL')
-    SECRET_KEY = environ.get('SECRET_KEY')
+# import importlib
+# dev_config = importlib.util.find_spec('config')
+# if dev_config is not None:
+#     from config.app_config import DB_URI, SECRET_KEY
+#     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+#     app.config['SQLALCHEMY_ECHO'] = False
+# else:
+#     DB_URI = environ.get('DATABASE_URL')
+#     SECRET_KEY = environ.get('SECRET_KEY')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = (environ.get('DATABASE_URL', DB_URI))
 app.config["SECRET_KEY"] = SECRET_KEY
+
+app.config['SQLALCHEMY_ECHO'] = False
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = DB_URI
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
@@ -53,8 +57,8 @@ def render_home():
     #get appliances and utility rates from the database
     appliances = utils.get_appliances()
     
-    
     form.appliance.choices = appliances
+    
     #get the submitted location, and set it to New York City if it is not found
 
     if session.get('location') == None:
@@ -85,7 +89,7 @@ def render_home():
         search = session['search_key']
         search.append(result)
         session['search_key'] = search
-        print(session)
+        
         return render_template("results.html", result=result)
     
     return render_template('index.html', form=form)

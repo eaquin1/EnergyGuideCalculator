@@ -4,7 +4,6 @@ from wtforms.validators import NumberRange, Length, InputRequired, ValidationErr
 from wtforms_components import SelectField, Email
 
 
-
 class EnergySearchForm(FlaskForm):
     """Form for appliance energy calculator"""
     
