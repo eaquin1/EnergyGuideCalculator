@@ -14,7 +14,7 @@ class SearchTests(TestCase):
         
         db.drop_all()
         db.create_all()
-
+        self.client = app.test_client()
         #create search
         user12 = User(username="bob", email="bob@bob.com", password="something")
         user12.id = 12

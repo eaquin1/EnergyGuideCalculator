@@ -17,7 +17,8 @@ class UtilTests(TestCase):
         
         db.drop_all()
         db.create_all()
-
+        self.client = app.test_client()
+        
         #create user
         blender = Appliance(name="Blender", watts=600, category="Kitchen")
         oven = Appliance(name="Oven", watts=3000, category="Kitchen")
