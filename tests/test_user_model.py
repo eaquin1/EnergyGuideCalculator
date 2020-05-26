@@ -16,7 +16,7 @@ class UserModelTests(TestCase):
 
     def setUp(self):
         #clear database
-        db.session.close()
+        
         db.drop_all()
         db.create_all()
 

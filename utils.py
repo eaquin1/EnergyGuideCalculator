@@ -1,4 +1,3 @@
-from app import db
 from models import db, connect_db, Appliance, Utility
 from collections import defaultdict
 import locale

@@ -33,7 +33,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 app.config['SQLALCHEMY_ECHO'] = False
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = DB_URI
+print(app.config["SQLALCHEMY_DATABASE_URI"])
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
