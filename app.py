@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify, Response, redirect, session, flash
+from flask import Flask, render_template, request, jsonify, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from config.app_config import DB_URI, SECRET_KEY
 from models import db, connect_db, Appliance, User, UserSearch, Utility
@@ -33,7 +33,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 app.config['SQLALCHEMY_ECHO'] = False
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-print(app.config["SQLALCHEMY_DATABASE_URI"])
+
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
@@ -111,14 +111,10 @@ def look_up_zipcode():
     if request.args.get('zipcode'):
         zipc = request.args.get('zipcode')
         location_info = retrieve_long_lat(zipc)
-    elif request.args.get('lat') and request.args.get('lng'):
+    else: 
         lat = request.args.get('lat')
         lng = request.args.get('lng')
         location_info = retrieve_zipcode(lng, lat)
-    else:
-        #set default to New York City
-        lat = 40.730610
-        lng = -73.935242
     
     utility = Utility.query.filter(Utility.location == location_info["state"]).first()
     location_info['rate'] = utility.rate

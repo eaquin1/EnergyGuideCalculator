@@ -3,6 +3,7 @@ from pexels_api import API
 import requests
 
 def retrieve_long_lat(zip):
+    """Retrieve longitude and latitude from the Geonames API"""
     location_dict = {}
 
     if(len(zip) == 6 or len(zip) == 3 or len(zip)== 7):
@@ -22,6 +23,7 @@ def retrieve_long_lat(zip):
     return location_dict
 
 def retrieve_zipcode(lng, lat):
+    """Retrieve zipcode form the Geonames API"""
     zip_dict = {}
     geonames = "http://api.geonames.org/findNearbyPostalCodesJSON?"
     resp = requests.get(geonames, params={"lat": lat, "lng": lng, "username": GEONAMES_USER})
@@ -60,7 +62,7 @@ def login_watttime(lat, lng):
     return watt_emissions
 
 def get_photo(appliance):
-    """Call the Pixabay API to return an image URL of the appliance. If there is no appropriate photo, use dictionary of URLs"""
+    """Call the Pexels API to return an image URL of the appliance. If there is no appropriate photo, use dictionary of URLs"""
 
     photo_dict = {
         "Wall AC": "https://i0.wp.com/homeairguides.com/wp-content/uploads/2020/02/best-through-the-wall-air-conditioners.jpg",
