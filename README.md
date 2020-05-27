@@ -10,6 +10,11 @@ EnergyGuide will report the current grid data for your location, and it also com
 
 The appliance and utility data was web scraped from the 2010 Buildings Energy Databook, Table 2.1.16; the EIA Electric Power Monthly, Table 5.06;, and [EnergyHub](https://www.energyhub.org/electricity-prices/)
 
+## Demo
+**Live demo deployed to https://energy-guide.herokuapp.com**
+
+![alt demo](https://github.com/eaquin1/EnergyGuideCalculator/blob/master/static/eguide.gif?raw=true)
+
 ## Installation
 
 On your local machine, you will need to create a Postgres database, set up a virtual environment in Pyhton, and create API credentials for [Watt Time](https://www.watttime.org/), [GeoNames](https://www.geonames.org) and [Pexels](https://www.pexels.com).
