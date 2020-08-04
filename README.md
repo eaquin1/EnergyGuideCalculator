@@ -17,7 +17,7 @@ The appliance and utility data was web scraped from the 2010 Buildings Energy Da
 
 ## Installation
 
-On your local machine, you will need to create a Postgres database, set up a virtual environment in Pyhton, and create API credentials for [Watt Time](https://www.watttime.org/), [GeoNames](https://www.geonames.org) and [Pexels](https://www.pexels.com).
+On your local machine, you will need to create a Postgres database, set up a virtual environment in Python, and create API credentials for [Watt Time](https://www.watttime.org/), [GeoNames](https://www.geonames.org) and [Pexels](https://www.pexels.com).
 
 ```
 > git clone https://github.com/eaquin1/EnergyGuideCalculator.git
